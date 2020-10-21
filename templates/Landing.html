@@ -14,14 +14,15 @@
       integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
       crossorigin="anonymous"
     />
+
     <link
       rel="stylesheet"
       href=" {{ url_for('static',filename='styles/css.css')}}"
     />
   </head>
   <body>
-    <div class="header">
-      <nav class="navblur navbar navbar-expand-lg navbar-light">
+    <!--<div class="header">-->
+      <nav class=" navbar-nav-scroll navbar navbar-expand-lg flex-column flex-md-row navbar-light">
         <button
           class="navbar-toggler"
           type="button"
@@ -35,7 +36,7 @@
         </button>
 
         <div
-          class="collapse navbar-collapse justify-content-center"
+          class=" collapse navbar-collapse justify-content-center"
           id="navbarNavAltMarkup"
         >
           <div class="navbar-collapse justify-content-center">
@@ -47,21 +48,25 @@
               />
             </a>
 
-            <a class="nav-link mt-2 text-light" href="/Home"><h3>Home</h3></a>
-            <a class="nav-link mt-2 text-light" href="/About"><h3>About</h3></a>
+            <a class="nav-link mt-2 text-light" href="#carouselExampleControls"><h3>Home</h3></a>
+            <a class="nav-link mt-2 text-light" href="#about"><h3>About</h3></a>
             <a class="nav-link mt-2 text-light" href="#"><h3>Pricing</h3></a>
           </div>
           <div class="navbar-collapse justify-content-center">
-            <button class="btn btn-outline-light btn-lg mr-sm-3" type="button">
+            <a class="btn btn-outline-light btn-lg mr-sm-3" role="button">
               Registrate
-            </button>
-            <button class="btn btn-outline-secondary btn-lg" type="button">
+            </a>
+            <a
+              class="btn btn-outline-secondary btn-lg"
+              role="button"
+              href="/login"
+            >
               Login
-            </button>
+            </a>
           </div>
         </div>
       </nav>
-    </div>
+    <!--</div>-->
 
     <!--carrucer-->
     <div
@@ -125,30 +130,90 @@
     </div>
     <!--fin de carrusel-->
     <!--tarjetas de about-->
-    <div class="container mw-100">
-      <div class="row justify-content-md-center">
+    <section id="about">
+    <div class="container mw-100 " >
+      <div class="row mt-4 justify-content-md-center">
+<!--una persona-->
+
         <div class="col">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Hola</h5>
-              <p class="card-text">ago va a ir aqui</p>
+          <div class="modal-dialog text-center">
+            <div>
+              <div class="modal-content  card-body perfiles" >
+                <div class="col-12 user-img">
+                  <img src="static/img/user.png" th:src="@{/img/user.png}" />
+                </div>
+                <h5 class="card-title">Nombre</h5>
+                <p class="card-text">Descripción</p>
+              </div>
             </div>
           </div>
         </div>
+<!--una persona-->
+
         <div class="col">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Hola</h5>
-              <p class="card-text">ago va a ir aqui</p>
+          <div class="modal-dialog text-center">
+            <div>
+              <div class="modal-content  card-body perfiles" >
+                <div class="col-12 user-img">
+                  <img src="static/img/user.png" th:src="@{/img/user.png}" />
+                </div>
+                <h5 class="card-title">Nombre</h5>
+                <p class="card-text">Descripción</p>
+              </div>
             </div>
           </div>
         </div>
+<!--una persona-->
+
+        <div class="col">
+          <div class="modal-dialog text-center">
+            <div>
+              <div class="modal-content  card-body perfiles" >
+                <div class="col-12 user-img">
+                  <img src="static/img/user.png" th:src="@{/img/user.png}" />
+                </div>
+                <h5 class="card-title">Nombre</h5>
+                <p class="card-text">Descripción</p>
+              </div>
+            </div>
+          </div>
+        </div>
+<!--una persona-->
+        <div class="col">
+          <div class="modal-dialog text-center">
+            <div>
+              <div class="modal-content card-body perfiles">
+                <div class="col-12 user-img">
+                  <img src="static/img/user.png" th:src="@{/img/user.png}" />
+                </div>
+                <h5 class="card-title">Nombre</h5>
+                <p class="card-text">Descripción</p>
+              </div>
+            </div>
+          </div>
+        </div>
+<!--una persona-->
+        <div class="col">
+          <div class="modal-dialog text-center">
+            <div>
+              <div class="modal-content card-body perfiles">
+                <div class="col-12 user-img">
+                  <img src="static/img/user.png" th:src="@{/img/user.png}" />
+                </div>
+                <h5 class="card-title">Nombre</h5>
+                <p class="card-text">Descripción</p>
+              </div>
+            </div>
+          </div>
+        </div>
+    </section>
+<!--fin-->
       </div>
     </div>
     <!--fin de tarjetas de about-->
     <!--pie de pagina-->
 
-    <div class="container mw-100">
+    <div class="container mw-100" >
       <div class="row">
         <div class="col-sm">
           <h4 class="text-center">Nosotros</h4>
@@ -161,6 +226,8 @@
       </div>
     </div>
     <!--fin de pie de pagina-->
+    <!--script de scroll-->
+    <script src="https://cdn.jsdelivr.net/gh/cferdinandi/smooth-scroll/dist/smooth-scroll.polyfills.min.js"></script>
     <!--scripts de bootstrap-->
     <script
       src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
@@ -177,5 +244,8 @@
       integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
       crossorigin="anonymous"
     ></script>
+    <script>
+	var scroll = new SmoothScroll('a[href*="#"]');
+    </script>
   </body>
 </html>
