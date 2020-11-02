@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Monefay</title>
+    <!--icono-->
+    <link
+      rel="icon"
+      href="{{ url_for('static',filename='img/Logo_solito.png')}}"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+      crossorigin="anonymous"
+    />
+    <!-- Los iconos tipo Solid de Fontawesome-->
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.0.8/css/solid.css"
+    />
+    <script src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+    <!--mi css-->
+    <link
+      rel="stylesheet"
+      href=" {{ url_for('static',filename='styles/monefay.css')}}"
+    />
+  </head>
+  <body>
+    <nav
+      class="navbar-nav-scroll navbar navbar-expand-lg flex-column flex-md-row navbar-light"
+    >
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNavAltMarkup"
+        aria-controls="navbarNavAltMarkup"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-collapse justify-content-center">
+          <a class="navbar-brand" href="/">
+            <img
+              src="{{ url_for('static',filename='img/Logo_completo.png')}}"
+              width="350"
+              height="90"
+            />
+          </a>
+        </div>
+        <div class="navbar-collapse justify-content-center">
+          <a
+            class="btn btn-outline-light btn-lg mr-sm-3"
+            role="button"
+            href="/"
+          >
+            Salir
+          </a>
+        </div>
+      </div>
+    </nav>
+    <!--main seccion-->
+    <div class="mw-100 mt-3 ml-5 mr-5">
+      <ul
+        class="nav nav-pills justify-content-around mb-3 ml-5 mr-5"
+        id="pills-tab"
+        role="tablist"
+      >
+        <li class="nav-item" role="presentation">
+          <a
+            class="nav-link active"
+            id="pills-home-tab"
+            data-toggle="pill"
+            href="#pills-home"
+            role="tab"
+            aria-controls="pills-home"
+            aria-selected="true"
+            >Home</a
+          >
+        </li>
+        <li class="nav-item" role="presentation">
+          <a
+            class="nav-link"
+            id="pills-profile-tab"
+            data-toggle="pill"
+            href="#pills-profile"
+            role="tab"
+            aria-controls="pills-profile"
+            aria-selected="false"
+            >Profile</a
+          >
+        </li>
+        <li class="nav-item" role="presentation">
+          <a
+            class="nav-link"
+            id="pills-contact-tab"
+            data-toggle="pill"
+            href="#pills-contact"
+            role="tab"
+            aria-controls="pills-contact"
+            aria-selected="false"
+            >Contact</a
+          >
+        </li>
+      </ul>
+    </div>
+    <!--contenido de las pestanias -->
+    <div class="tab-content" id="pills-tabContent">
+      <div
+        class="tab-pane fade show active "
+        id="pills-home"
+        role="tabpanel"
+        aria-labelledby="pills-home-tab"
+      >
+        <h1>Cuentas</h1>
+      </div>
+      <div
+        class="tab-pane fade"
+        id="pills-profile"
+        role="tabpanel"
+        aria-labelledby="pills-profile-tab"
+      >
+        <h1>añadir</h1>
+      </div>
+      <div
+        class="tab-pane fade"
+        id="pills-contact"
+        role="tabpanel"
+        aria-labelledby="pills-contact-tab"
+      >
+        <h1>estadisticas</h1>
+      </div>
+    </div>
+    <!--scripts de bootstrap-->
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+      integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+      integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

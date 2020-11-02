@@ -6,7 +6,11 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-    <title>Landing</title>
+    <title>Monefay</title>
+    <link
+      rel="icon"
+      href="{{ url_for('static',filename='img/Logo_solito.png')}}"
+    />
 
     <link
       rel="stylesheet"
@@ -14,15 +18,23 @@
       integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
       crossorigin="anonymous"
     />
-
+    <!-- Los iconos tipo Solid de Fontawesome-->
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.0.8/css/solid.css"
+    />
+    <script src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+    <!--mi css-->
     <link
       rel="stylesheet"
       href=" {{ url_for('static',filename='styles/css.css')}}"
     />
   </head>
   <body>
-    <!--<div class="header">-->
-      <nav class=" navbar-nav-scroll navbar navbar-expand-lg flex-column flex-md-row navbar-light">
+    <header class=" Letras position-fixed sticky-top">
+      <nav
+        class="navbar-nav-scroll navbar navbar-expand-lg flex-column flex-md-row navbar-light"
+      >
         <button
           class="navbar-toggler"
           type="button"
@@ -36,37 +48,45 @@
         </button>
 
         <div
-          class=" collapse navbar-collapse justify-content-center"
+          class="collapse navbar-collapse justify-content-center"
           id="navbarNavAltMarkup"
         >
           <div class="navbar-collapse justify-content-center">
             <a class="navbar-brand" href="/">
               <img
-                src="{{ url_for('static',filename='img/Logo_Talvez.png')}}"
-                width="250"
+                src="{{ url_for('static',filename='img/Logo_completo.png')}}"
+                width="350"
                 height="90"
               />
             </a>
 
-            <a class="nav-link mt-2 text-light" href="#carouselExampleControls"><h3>Home</h3></a>
-            <a class="nav-link mt-2 text-light" href="#about"><h3>About</h3></a>
-            <a class="nav-link mt-2 text-light" href="#"><h3>Pricing</h3></a>
+            <a class="nav-link mt-4 text-light" href="#carouselExampleControls"
+              ><h3 >Home</h3></a
+            >
+            <a class="nav-link mt-4 text-light" href="#app"><h3>App</h3></a>
+            <a class="nav-link mt-4 text-light" href="#seguridad"
+              ><h3 >Seguridad</h3></a
+            >
+            <a class="nav-link mt-4 text-light" href="#aboutCuenta"
+              ><h3 >Cuentas</h3></a
+            >
+            <a class="nav-link mt-4 text-light" href="#about"><h3>About</h3></a>
           </div>
           <div class="navbar-collapse justify-content-center">
-            <a class="btn btn-outline-light btn-lg mr-sm-3" role="button">
+            <a
+              class=" btn btn-outline-light btn-lg mr-sm-3"
+              role="button"
+              href="/registro"
+            >
               Registrate
             </a>
-            <a
-              class="btn btn-outline-secondary btn-lg"
-              role="button"
-              href="/login"
-            >
+            <a class="btn btn-outline-info btn-lg" role="button" href="/login">
               Login
             </a>
           </div>
         </div>
       </nav>
-    <!--</div>-->
+    </header>
 
     <!--carrucer-->
     <div
@@ -74,38 +94,43 @@
       class="carousel slide"
       data-ride="carousel"
     >
-      <div class="carousel-inner">
+      <div class="Letras carousel-inner">
         <div class="imgcar carousel-item active">
           <img
             src=" {{ url_for('static',filename='img/749.jpg')}}"
-            class="w-100"
-            style="height: 700px"
+            class="w-100 imgcarrusel"
           />
-          <div class="carousel-caption d-none d-md-block">
-            <h5>First slide label</h5>
-            <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+          <div class="d-flex carousel-caption d-none d-md-block">
+            <h5>Elige tu diviza</h5>
+            <p>Elige la diviza que le cobraras a tus clientes</p>
+            <a class="btn btn-info mt-4" href="/registro">Registrate ya</a>
           </div>
         </div>
         <div class="imgcar carousel-item">
           <img
             src=" {{ url_for('static',filename='img/2289.jpg')}}"
-            class="w-100"
-            style="height: 700px"
+            class="w-100 imgcarrusel"
           />
-          <div class="carousel-caption d-none d-md-block">
-            <h5>First slide label</h5>
-            <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+          <div class="d-flex carousel-caption d-none d-md-block">
+            <h5>Lleva el control de tus creditos</h5>
+            <p>
+              Calcula el flujo de caja de tus créditos otorgados fácil y
+              sencillo
+            </p>
+            <a class="btn btn-info mt-4" href="/registro">Registrate ya</a>
           </div>
         </div>
         <div class="imgcar carousel-item">
           <img
             src=" {{ url_for('static',filename='img/manos.jpg')}}"
-            class="w-100"
-            style="height: 700px"
+            class="w-100 imgcarrusel"
           />
-          <div class="carousel-caption d-none d-md-block">
-            <h5>First slide label</h5>
-            <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+          <div class="d-flex carousel-caption d-none d-md-block">
+            <h5>Trato cercano con los clientes</h5>
+            <p>
+              Personaliza de forma fácil y sencilla la cuentas de tus clientes
+            </p>
+            <a class="btn btn-info mt-4" href="/registro">Registrate ya</a>
           </div>
         </div>
       </div>
@@ -128,92 +153,324 @@
         <span class="sr-only">Next</span>
       </a>
     </div>
+
     <!--fin de carrusel-->
-    <!--tarjetas de about-->
-    <section id="about">
-    <div class="container mw-100 " >
-      <div class="row mt-4 justify-content-md-center">
-<!--una persona-->
 
-        <div class="col">
-          <div class="modal-dialog text-center">
-            <div>
-              <div class="modal-content  card-body perfiles" >
-                <div class="col-12 user-img">
-                  <img src="static/img/user.png" th:src="@{/img/user.png}" />
-                </div>
-                <h5 class="card-title">Nombre</h5>
-                <p class="card-text">Descripción</p>
-              </div>
-            </div>
-          </div>
-        </div>
-<!--una persona-->
+    <!--info de app-->
+    <!--control-->
 
-        <div class="col">
+    <div class="container mw-100 app" id="app"></div>
+    <div class="Letras container mw-100 justify-content-md-center">
+      <div class="row mt-4">
+        <!--visualiza-->
+        <div class="col mt-3">
           <div class="modal-dialog text-center">
-            <div>
-              <div class="modal-content  card-body perfiles" >
-                <div class="col-12 user-img">
-                  <img src="static/img/user.png" th:src="@{/img/user.png}" />
-                </div>
-                <h5 class="card-title">Nombre</h5>
-                <p class="card-text">Descripción</p>
-              </div>
+            <h3 class="card-title">Visualizar</h3>
+            <p class="card-text">
+              Visualiza el estado de las cuentas de tus clientes
+            </p>
+            <div class="col-12">
+              <img
+                class="img-fluid"
+                src="{{ url_for('static',filename='img/sales-team.png')}}"
+              />
             </div>
           </div>
         </div>
-<!--una persona-->
-
-        <div class="col">
+        <!--Lineas-->
+        <div class="col mt-3">
           <div class="modal-dialog text-center">
-            <div>
-              <div class="modal-content  card-body perfiles" >
-                <div class="col-12 user-img">
-                  <img src="static/img/user.png" th:src="@{/img/user.png}" />
-                </div>
-                <h5 class="card-title">Nombre</h5>
-                <p class="card-text">Descripción</p>
-              </div>
+            <h3 class="card-title">Crear</h3>
+            <p class="card-text">
+              Crea cuentas para adminitrar las lineas de credito a tus clientes
+            </p>
+            <div class="col-12">
+              <img
+                class="img-fluid mt-5"
+                src="{{ url_for('static',filename='img/credit-card.png')}}"
+              />
             </div>
           </div>
         </div>
-<!--una persona-->
-        <div class="col">
+        <!--Personaliza-->
+        <div class="col mt-3">
           <div class="modal-dialog text-center">
-            <div>
-              <div class="modal-content card-body perfiles">
-                <div class="col-12 user-img">
-                  <img src="static/img/user.png" th:src="@{/img/user.png}" />
-                </div>
-                <h5 class="card-title">Nombre</h5>
-                <p class="card-text">Descripción</p>
-              </div>
+            <h3 class="card-title">Personalizar</h3>
+            <p class="card-text">
+              Personaliza los cobros de la linea de credito
+            </p>
+            <div class="col-12">
+              <img
+                class="img-fluid"
+                src="{{ url_for('static',filename='img/accountant.png')}}"
+              />
             </div>
           </div>
         </div>
-<!--una persona-->
-        <div class="col">
-          <div class="modal-dialog text-center">
-            <div>
-              <div class="modal-content card-body perfiles">
-                <div class="col-12 user-img">
-                  <img src="static/img/user.png" th:src="@{/img/user.png}" />
-                </div>
-                <h5 class="card-title">Nombre</h5>
-                <p class="card-text">Descripción</p>
-              </div>
-            </div>
-          </div>
-        </div>
-    </section>
-<!--fin-->
       </div>
     </div>
+    <!--fin control-->
+    <!--segudidad-->
+    <div class="container mw-100 app" id="seguridad"></div>
+    <div class="Letras container mw-100 fondoSegu">
+      <div class="row">
+        <div
+          class="col izquierda"
+          style="text-align: center; line-height: 490px"
+        >
+          <img
+            class="mt-3 img-fluid"
+            src="{{ url_for('static',filename='img/security.png')}}"
+          />
+        </div>
+
+        <div class="col derecha">
+          <div class="modal-dialog text-center">
+            <div>
+              <h1>Seguridad</h1>
+              <p>Crea tu cuenta ya</p>
+            </div>
+            <div class="sm-8 register-section">
+              <div class="modal-content contenido">
+                <form class="col-12" action="/seguridad" method="POST">
+                  <div class="form-group" id="user-group">
+                    <input
+                      type="text"
+                      class="mt-4 form-control"
+                      placeholder="Nombre"
+                      name="name"
+                    />
+                  </div>
+                  <div class="form-group" id="user-group">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Apellido paterno"
+                      name="lastnameF"
+                    />
+                  </div>
+                  <div class="form-group" id="user-group">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Apellido materno"
+                      name="lastnameM"
+                    />
+                  </div>
+                  <div class="form-group" id="store-group">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Nombre de tienda"
+                      name="store"
+                    />
+                  </div>
+                  <div class="form-group" id="email-group">
+                    <input
+                      type="email"
+                      class="form-control"
+                      placeholder="Correo"
+                      name="email"
+                    />
+                  </div>
+
+                  <button type="submit" class="btn btn-primary" href="#">
+                    Registrate ya
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--fin de segudidad-->
+    <!--creacion de cuenta-->
+    <div class="container mw-100 app" id="aboutCuenta"></div>
+    <div class="Letras container mw-100">aqui ira algo importante</div>
+    <!--fin de creacion de cuenta-->
+    <!--fin de info app -->
+
+    <!--tarjetas de about-->
+    <div class="container mw-100 app" id="about"></div>
+    <section class="Letras">
+      <div class="container mw-100 about">
+        <div class="row mt-4 justify-content-md-center">
+          <!--una persona-->
+
+          <div class="col mt-3">
+            <div class="modal-dialog text-center">
+              <div class="modal-content card-body perfiles">
+                <div class="col-12 user-img">
+                  <img src="static/img/user.png" th:src="@{/img/user.png}" />
+                </div>
+                <h5 class="card-title">Nombre</h5>
+                <p class="card-text">Descripción</p>
+                <div class="row justify-content-center iconosRed">
+                  <div class="col">
+                    <a href="#" target="_blank">
+                      <i class="fab fa-facebook-square"></i>
+                    </a>
+                  </div>
+                  <div class="col">
+                    <a href="#" target="_blank">
+                      <i class="fab fa-github"></i>
+                    </a>
+                  </div>
+                  <div class="col">
+                    <a href="#" target="_blank">
+                      <i class="fab fa-instagram"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--una persona-->
+
+          <div class="col mt-3">
+            <div class="modal-dialog text-center">
+              <div class="modal-content card-body perfiles">
+                <div class="col-12 user-img">
+                  <img src="static/img/mayraformal.jpg" th:src="@{/img/user.png}" />
+                </div>
+                <h5 class="card-title">Nombre</h5>
+                <p class="card-text">Descripción</p>
+                <div class="row justify-content-center iconosRed">
+                  <div class="col">
+                    <a href="#" target="_blank">
+                      <i class="fab fa-facebook-square"></i>
+                    </a>
+                  </div>
+                  <div class="col" target="_blank">
+                    <a href="#">
+                      <i class="fab fa-github"></i>
+                    </a>
+                  </div>
+                  <div class="col" target="_blank">
+                    <a href="#">
+                      <i class="fab fa-instagram"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--una persona-->
+
+          <div class="col mt-3">
+            <div class="modal-dialog text-center">
+              <div class="modal-content card-body perfiles">
+                <div class="col-12 user-img">
+                  <img
+                    src="static/img/foto Diaz.jpg"
+                    th:src="@{/img/user.png}"
+                  />
+                </div>
+                <h5 class="card-title">Sebastian Diaz Torres</h5>
+                <p class="card-text">Yo cree todo lo que vez</p>
+
+                <div class="row justify-content-center iconosRed">
+                  <div class="col">
+                    <a
+                      href="https://www.facebook.com/sebastian.diaztorres.7"
+                      target="_blank"
+                    >
+                      <i class="fab fa-facebook-square"></i>
+                    </a>
+                  </div>
+                  <div class="col">
+                    <a href="https://github.com/XantX" target="_blank">
+                      <i class="fab fa-github"></i>
+                    </a>
+                  </div>
+                  <div class="col">
+                    <a href="https://www.instagram.com/zxantx/" target="_blank">
+                      <i class="fab fa-instagram"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--una persona-->
+          <div class="col mt-3">
+            <div class="modal-dialog text-center">
+              <div class="modal-content card-body perfiles">
+                <div class="col-12 user-img">
+                  <img src="static/img/user.png" th:src="@{/img/user.png}" />
+                </div>
+                <h5 class="card-title">Nombre</h5>
+                <p class="card-text">Descripción</p>
+                <div class="row justify-content-center iconosRed">
+                  <div class="col">
+                    <a href="#" target="_blank">
+                      <i class="fab fa-facebook-square"></i>
+                    </a>
+                  </div>
+                  <div class="col">
+                    <a href="#" target="_blank">
+                      <i class="fab fa-github"></i>
+                    </a>
+                  </div>
+                  <div class="col">
+                    <a href="#" target="_blank">
+                      <i class="fab fa-instagram"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--una persona-->
+          <div class="col mt-3">
+            <div class="modal-dialog text-center">
+              <div class="modal-content card-body perfiles">
+                <div class="col-12 user-img">
+                  <img src="static/img/user.png" th:src="@{/img/user.png}" />
+                </div>
+                <h5 class="card-title">Nombre</h5>
+                <p class="card-text">Descripción</p>
+                <div class="row justify-content-center iconosRed">
+                  <div class="col">
+                    <a href="#" target="_blank">
+                      <i class="fab fa-facebook-square"></i>
+                    </a>
+                  </div>
+                  <div class="col">
+                    <a href="#" target="_blank">
+                      <i class="fab fa-github"></i>
+                    </a>
+                  </div>
+                  <div class="col">
+                    <a href="#" target="_blank">
+                      <i class="fab fa-instagram"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--fin de personas -->
+        </div>
+      </div>
+    </section>
     <!--fin de tarjetas de about-->
     <!--pie de pagina-->
-
-    <div class="container mw-100" >
+    <div style="height: 90px; overflow: hidden" id="contactanos">
+      <svg
+        viewBox="0 0 500 150"
+        preserveAspectRatio="none"
+        style="height: 100%; width: 100%"
+      >
+        <path
+          d="M0.00,49.98 C149.99,150.00 349.20,-49.98 500.00,49.98 L500.00,150.00 L0.00,150.00 Z"
+          style="stroke: none; fill: #4f92ff"
+        ></path>
+      </svg>
+    </div>
+    <!--linea curveada-->
+    <div class="Letras container mw-100 pie">
       <div class="row">
         <div class="col-sm">
           <h4 class="text-center">Nosotros</h4>
@@ -225,6 +482,7 @@
         <div class="col-sm"><h4 class="text-center">Contactanos</h4></div>
       </div>
     </div>
+
     <!--fin de pie de pagina-->
     <!--script de scroll-->
     <script src="https://cdn.jsdelivr.net/gh/cferdinandi/smooth-scroll/dist/smooth-scroll.polyfills.min.js"></script>
@@ -245,7 +503,7 @@
       crossorigin="anonymous"
     ></script>
     <script>
-	var scroll = new SmoothScroll('a[href*="#"]');
+      var scroll = new SmoothScroll('a[href*="#"]');
     </script>
   </body>
 </html>

@@ -51,13 +51,10 @@
               height="90"
             />
           </a>
-
-          <a class="nav-link mt-2 text-light" href="/Home"><h3>Home</h3></a>
-          <a class="nav-link mt-2 text-light" href="/About"><h3>About</h3></a>
-          <a class="nav-link mt-2 text-light" href="#"><h3>Pricing</h3></a>
         </div>
       </div>
     </nav>
+
     <!--aqui comienza el login-->
     <div class="modal-dialog text-center">
       <div class="col-sm-8 main-section">
@@ -65,13 +62,13 @@
           <div class="col-12 user-img">
             <img src="static/img/user.png" th:src="@{/img/user.png}" />
           </div>
-          <form class="col-12" th:action="@{/login}" method="get">
+          <form class="col-12" action="/login" method="POST">
             <div class="form-group" id="user-group">
               <input
-                type="text"
+                type="email"
                 class="form-control"
-                placeholder="Nombre de usuario"
-                name="username"
+                placeholder="Correo"
+                name="email"
               />
             </div>
             <div class="form-group" id="contrasena-group">
@@ -86,9 +83,7 @@
             <button type="submit" class="btn btn-primary">
               <i class="fas fa-sign-in-alt"></i> Ingresar
             </button>
-            <button type="submit" class="btn btn-primary" href="#">
-              Registrate
-            </button>
+            <a class="col-6 btn btn-primary" href="/registro"> Registrate </a>
           </form>
           <div class="col-12 forgot">
             <a href="#">Recordar contrasena?</a>

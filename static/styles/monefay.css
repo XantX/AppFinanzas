@@ -1,0 +1,8 @@
+body {
+  background: linear-gradient(
+    270deg,
+    rgba(148, 175, 242, 1) 60%,
+    rgba(130, 130, 130, 0.3)
+  );
+  background-repeat: no-repeat;
+}
