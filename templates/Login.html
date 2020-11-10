@@ -46,8 +46,8 @@
         <div class="navbar-collapse justify-content-center">
           <a class="navbar-brand" href="/">
             <img
-              src="{{ url_for('static',filename='img/Logo_Talvez.png')}}"
-              width="250"
+              src="{{ url_for('static',filename='img/Logo_completo.png')}}"
+              width="350"
               height="90"
             />
           </a>
@@ -60,9 +60,9 @@
       <div class="col-sm-8 main-section">
         <div class="modal-content">
           <div class="col-12 user-img">
-            <img src="static/img/user.png" th:src="@{/img/user.png}" />
+            <img src="static/img/hombre-01.png" th:src="@{/img/hombre-01.png}" />
           </div>
-          <form class="col-12" action="/login" method="POST">
+          <form class="col-12" action="/loginIn" method="POST">
             <div class="form-group" id="user-group">
               <input
                 type="email"
@@ -85,9 +85,18 @@
             </button>
             <a class="col-6 btn btn-primary" href="/registro"> Registrate </a>
           </form>
-          <div class="col-12 forgot">
+          <div class="col-12 forgot mb-2">
             <a href="#">Recordar contrasena?</a>
           </div>
+        {%with messages = get_flashed_messages(with_categories=true)%} 
+        {%if messages%} 
+        {%for category, message in messages%}
+        <div class="alert {{category}}" role="alert" id="idMensajeError">
+          <h4 class=""> {{ message }}</h4>
+        </div>
+        {%endfor%} 
+        {%endif%} 
+        {%endwith%}
         </div>
       </div>
     </div>
