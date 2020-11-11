@@ -33,7 +33,7 @@ def login():
 def main():
     if 'email' in session:
         cur = mysql.connection.cursor()
-        cur.execute('SELECT DNI, name, perfilimg FROM cuenta WHERE storeid = %s', [session['email']])
+        cur.execute('SELECT Cu.DNI, Cu.name, Cu.perfilimg, Cre.limite FROM cuenta Cu, credito Cre WHERE Cu.storeid = %s and Cu.DNI = Cre.idlinea', [session['email']])
         data = cur.fetchall()
         return render_template('monefay.html', datos = data)
     else:
@@ -187,7 +187,13 @@ def cuentaRes():
 
 @app.route("/monefay/<string:cuenta>") 
 def cuenta(cuenta):
-    return render_template('monefaycuenta.html')
+    cur = mysql.connection.cursor()
+    ## Obtiene los datos de una cuenta
+    query = "SELECT Cu.*, Cre.limite, Cre.tipodetasa, Cre.porcentaje,Cre.Mantenimiento,Cre.divisa,Cre.activacion,Cre.fechaCreacion FROM cuenta Cu, credito Cre WHERE Cu.DNI = %s and Cu.DNI = Cre.idlinea"
+    cur.execute(query,[cuenta])
+    datosCuenta = cur.fetchall()
+    print(datosCuenta)
+    return render_template('monefaycuenta.html', datoscuenta = datosCuenta)
 ### Funcion para salir
 @app.route("/salir")
 def salir():

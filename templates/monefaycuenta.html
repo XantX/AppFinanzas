@@ -118,12 +118,68 @@
     <div class="contenido tab-content" id="pills-tabContent">
       <!--seccion 1.1 de la cuenta -->
       <div class="tab-pane fade show active" id="cuenta" role="tabpanel">
-        <h1 id="cuentaDni"></h1>
-      </div>
+        <div class="row mw-100">
+          <!--izquierda-->
+          <div class="container col-4 text-center">
+            <div class="main-section ml-5">
+              <div class="modal-content">
+                <div class="container col-8 justify-content-center">
+                  <img
+                    src="../static/img/{{datoscuenta.0.2}}"
+                    class="img-fluid mt-2"
+                  />
+                </div>
 
+                <div class="LetrasCrear mt-3">
+                  <h3>
+                    {{datoscuenta.0.3}} {{datoscuenta.0.4}} {{datoscuenta.0.5}}
+                  </h3>
+                  <h3>Telefono: {{datoscuenta.0.6}}</h3>
+                  <h3>{{datoscuenta.0.14}}</h3>
+                  <h3>{{datoscuenta.0.15}}</h3>
+                  <h3>{{datoscuenta.0.17}}</h3>
+                  <h3>{{datoscuenta.0.18}}</h3>
+                  <h3>{{datoscuenta.0.20}}</h3>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!--Derecha-->
+          <div class="col-8 text-center">
+            <div class="main-section mr-4">
+              <div class="modal-content LetrasCrear">
+                <div>
+                  <h1>Saldo Disponible: {{datoscuenta.0.14}}</h1>
+                </div>
+                <div>
+                  <h3 class="text-left">Movimientos</h3>
+                  <table class="table table-striped">
+                    <thead class="thead-light">
+                      <tr>
+                        <th scope="col">#Movimientos</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Monto</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!--aqui se usara la tabla de movimientos-->
+                      <tr class="table-light">
+                        <th scope="row">1</th>
+                        <td>Mark</td>
+                        <td>Otto</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <!--seccion 1-->
       <div
-        class="tab-pane fade "
+        class="tab-pane fade"
         ria-labelledby="pills-home-tab"
         role="tabpanel"
         id="pills-home"

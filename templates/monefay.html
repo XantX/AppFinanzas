@@ -154,8 +154,11 @@
                         th:src="@{/img/{{dato.2}}}"
                       />
                     </div>
-                    <h1 class="LetrasCrear">{{dato.1}}</h1>
-                    <h1 class="LetrasCrear">{{dato.0}}</h1>
+                    <h4 class="LetrasCrear text-left">DNI:</h4>
+                    <h4 class="LetrasCrear">{{dato.0}}</h4>
+                    <h4 class="LetrasCrear">{{dato.1}}</h4>
+                    <h4 class="LetrasCrear text-left">Limite de cuenta</h4>
+                    <h4 class="LetrasCrear text-left">${{dato.3}}</h4>
                     <a
                         type="button"
                       class="mb-3 mt-3 btn btn-primary"
@@ -549,7 +552,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Confirma</h5>
             <button
               type="button"
               class="close"
@@ -560,7 +563,7 @@
             </button>
           </div>
           <div class="modal-body">
-            <h4 class="text-center">Confirme el dni eliminar</h4>
+            <h4 class="text-center">Confirme el DNI a eliminar</h4>
             <h4 class="text-center" id="comfirDNI"></h4>
             <form  id="dni">
               <div class="form-group" id="contrasena-group">
@@ -574,7 +577,7 @@
                 />
               </div>
             </form>
-            <h5 id="advertencia" style="display: none;">No coincide el dni con el que se quiere borrar</h5>
+            <h5 id="advertencia" class="alert alert-warning" style="display: none;">No coincide el dni con el que se quiere borrar</h5>
           </div>
 
           <div class="modal-footer">
