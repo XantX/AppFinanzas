@@ -19,7 +19,7 @@ semilla = bcrypt.gensalt()
 @app.route('/')
 def Landing():
     if 'email' in session:
-        return render_template('monefay.html')
+        return redirect(url_for('main'))
     else:
         return render_template('Landing.html') 
 

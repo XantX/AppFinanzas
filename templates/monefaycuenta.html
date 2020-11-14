@@ -116,6 +116,9 @@
 
     <!--contenido de las pestanias -->
     <div class="contenido tab-content" id="pills-tabContent">
+      <div class="tab-pane fade show" id="transaccion" role="tabpanel">
+          <button data-toggle="pill" href="#cuenta" id="regreso"></button>
+      </div>
       <!--seccion 1.1 de la cuenta -->
       <div class="tab-pane fade show active" id="cuenta" role="tabpanel">
         <div class="row mw-100">
@@ -143,17 +146,30 @@
                 </div>
               </div>
             </div>
+
+            <div class="main-section ml-5">
+              <div class="modal-content">
+                <div class="container justify-content-center mt-3 mb-3">
+                  <button class="col-12 btn-lg btn-primary">
+                    Cerrar Credito
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
 
           <!--Derecha-->
-          <div class="col-8 text-center">
-            <div class="main-section mr-4">
+          <div class="container col-8 text-center">
+            <div class="main-section mr-2">
               <div class="modal-content LetrasCrear">
-                <div>
-                  <h1>Saldo Disponible: {{datoscuenta.0.14}}</h1>
+                <div class="mt-2">
+                  <h3>Salgo actual {{datoscuenta.0.14}}</h3>
+                  <h3>Saldo Disponible: {{datoscuenta.0.14}}</h3>
                 </div>
-                <div>
-                  <h3 class="text-left">Movimientos</h3>
+                <div class="" id="filtro"></div>
+
+                <h3 class="text-left">Movimientos:</h3>
+                <div class="overflow-auto" style="height: 470px">
                   <table class="table table-striped">
                     <thead class="thead-light">
                       <tr>
@@ -171,6 +187,19 @@
                       </tr>
                     </tbody>
                   </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="main-section mr-2">
+              <div class="modal-content">
+                <div class="row">
+                  <div class="col container justify-content-center mt-3 mb-3">
+                    <button class="col-12 btn-lg btn-secondary" OnClick="pasar()" id="cobrar">Cobrar</button>
+                  </div>
+                  <div class="col container justify-content-center mt-3 mb-3">
+                    <button class="col-12 btn-lg btn-primary" data-toggle="pill" href="#transaccion" id="retiro" OnClick="pasar()" >Retiro</button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -590,7 +619,7 @@
         </div>
       </div>
     </div>
-    <script src="static/js/monefay.js"></script>
+    <script src="../static/js/monefay.js"></script>
     <!--scripts de bootstrap-->
     <script
       src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
