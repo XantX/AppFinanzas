@@ -130,20 +130,17 @@
       >
         <!--filtro-->
         <nav class="">navigation links</nav>
-        {%with messages = get_flashed_messages(with_categories=true)%}
-        {%if messages%} 
-        {%for category, message in messages%}
+        {%with messages = get_flashed_messages(with_categories=true)%} {%if
+        messages%} {%for category, message in messages%}
         <div class="alert {{ category }} " role="alert" id="idMensajeError">
           <h4 class="text-center">{{ message }}</h4>
         </div>
-        {%endfor%}
-        {%endif%} 
-        {%endwith%}
+        {%endfor%} {%endif%} {%endwith%}
         <!--cajas -->
         <div class="container mw-100 mt-4">
-          <div class="row mw-100 ">
+          <div class="row mw-100">
             {%for dato in datos%}
-            <div class="col-4">
+            <div class="container col-4">
               <div class="modal-dialog text-center">
                 <div class="col-sm-8 main-section">
                   <div class="modal-content">
@@ -160,7 +157,7 @@
                     <h4 class="LetrasCrear text-left">Limite de cuenta</h4>
                     <h4 class="LetrasCrear text-left">${{dato.3}}</h4>
                     <a
-                        type="button"
+                      type="button"
                       class="mb-3 mt-3 btn btn-primary"
                       id="{{dato.0}}"
                       onClick="activacion('{{dato.0}}')"
@@ -176,7 +173,7 @@
                       data-target="#exampleModal"
                       onClick="DNI('{{dato.0}}')"
                     >
-                    Eliminar
+                      Eliminar
                     </button>
                   </div>
                 </div>
@@ -460,11 +457,11 @@
                       <div>
                         <h3 class="LetrasCrear">Porcentaje de interes</h3>
                         <div class="form-group" id="user-group">
+                          <!--required=""-->
                           <input
                             type="text"
                             class="form-control"
                             placeholder="Porcentaje"
-                            required=""
                             pattern="[0-9]+"
                             name="porcentTasa"
                           />
@@ -473,13 +470,26 @@
                       <div>
                         <h3 class="LetrasCrear">Limite de la linea</h3>
                         <div class="form-group" id="user-group">
+                          <!--required=""-->
                           <input
                             type="text"
                             class="form-control"
                             placeholder="Limite de la linea"
                             pattern="[0-9]+"
-                            required=""
                             name="limite"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <h3 class="LetrasCrear">Monto de mantenimiento</h3>
+                        <div class="form-group" id="user-group">
+                          <!--required=""-->
+                          <input
+                            type="text"
+                            class="form-control"
+                            placeholder="Monto de Mantenimiento"
+                            pattern="[0-9]+"
+                            name="montoMantenimiento"
                           />
                         </div>
                       </div>
@@ -498,14 +508,48 @@
                         <h3 class="LetrasCrear">Tipo de divisa</h3>
                         <div class="form-group" id="user-group">
                           <select class="form-control" name="divisa">
-                            <option value="Soles">Soles</option>
-                            <option value="Dolares">Dolares</option>
+                            {%for divisa in divisas%}
+                            <option value="{{divisa.0}}">{{divisa.1}}</option>
+                            {%endfor%}
                           </select>
+                        </div>
+                      </div>
+                      <div>
+                        <h3 class="LetrasCrear">Periodo Interes</h3>
+                        <div class="form-group" id="user-group">
+                          <select class="form-control" name="Periodo">
+                            {%for Periodo in Periodos%}
+                            <option value="{{Periodo.0}}">{{Periodo.1}}</option>
+                            {%endfor%}
+                          </select>
+                        </div>
+                      </div>
+                      <div>
+                        <h3 class="LetrasCrear">Periodo Mantenimiento</h3>
+                        <div class="form-group" id="user-group">
+                          <select class="form-control" name="PeriodoMantenimiento">
+                            {%for Periodo in Periodos%}
+                            <option value="{{Periodo.0}}">{{Periodo.1}}</option>
+                            {%endfor%}
+                          </select>
+                        </div>
+                      </div>
+                      <div>
+                        <h3 class="LetrasCrear">Fecha de cierre</h3>
+                        <div class="form-group">
+                          <!--required=""-->
+                          <input
+                            type="date"
+                            name="cierre"
+                            min="2018-01-01"
+                            max="2018-12-31"
+                          />
                         </div>
                       </div>
                       <div>
                         <h3 class="LetrasCrear">Costo de activacion</h3>
                         <div class="form-group" id="user-group">
+                          <!--required=""-->
                           <input
                             type="text"
                             class="form-control"
@@ -565,7 +609,7 @@
           <div class="modal-body">
             <h4 class="text-center">Confirme el DNI a eliminar</h4>
             <h4 class="text-center" id="comfirDNI"></h4>
-            <form  id="dni">
+            <form id="dni">
               <div class="form-group" id="contrasena-group">
                 <input
                   type="text"
@@ -577,7 +621,13 @@
                 />
               </div>
             </form>
-            <h5 id="advertencia" class="alert alert-warning" style="display: none;">No coincide el dni con el que se quiere borrar</h5>
+            <h5
+              id="advertencia"
+              class="alert alert-warning"
+              style="display: none"
+            >
+              No coincide el dni con el que se quiere borrar
+            </h5>
           </div>
 
           <div class="modal-footer">
@@ -589,7 +639,13 @@
             >
               Cancelar
             </button>
-            <button id="Save" onClick="confirmar()" type="button" class="btn btn-primary" form="dni">
+            <button
+              id="Save"
+              onClick="confirmar()"
+              type="button"
+              class="btn btn-primary"
+              form="dni"
+            >
               Save changes
             </button>
           </div>

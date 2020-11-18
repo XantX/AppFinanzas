@@ -33,9 +33,17 @@ def login():
 def main():
     if 'email' in session:
         cur = mysql.connection.cursor()
-        cur.execute('SELECT Cu.DNI, Cu.name, Cu.perfilimg, Cre.limite FROM cuenta Cu, credito Cre WHERE Cu.storeid = %s and Cu.DNI = Cre.idlinea', [session['email']])
-        data = cur.fetchall()
-        return render_template('monefay.html', datos = data)
+        # Busca los clientes
+        # cur.execute('SELECT Cu.DNI, Cu.name, Cu.perfilimg, Cre.limite FROM cuenta Cu, credito Cre WHERE Cu.storeid = %s and Cu.DNI = Cre.idlinea', [session['email']])
+        # data = cur.fetchall()
+        # return render_template('monefay.html', datos = data)
+        Query="SELECT * FROM divisa"
+        cur.execute(Query)
+        divisa = cur.fetchall()
+
+        cur.execute("SELECT * FROM periododepago")
+        Periodo = cur.fetchall()
+        return render_template('monefay.html',divisas = divisa,Periodos = Periodo)
     else:
         return render_template('Landing.html')
 
@@ -111,6 +119,7 @@ def loginin():
             return redirect(url_for('login'))
         password_encode = password.encode("utf-8")
         cur = mysql.connection.cursor()
+        ### Tabla de cuenta Busqueda de email
         sQuery = "SELECT email, password FROM usuario WHERE email = %s"
         cur.execute(sQuery,[email])
         usuario = cur.fetchone()
@@ -145,6 +154,7 @@ def cuentaRes():
         ## Verificar dni
         dni = request.form['dni']
         cur = mysql.connection.cursor()
+        ### Consumo de tabla cuenta
         query = "SELECT DNI FROM cuenta WHERE DNI = %s"
         cur.execute(query,[dni])
         cuenta = cur.fetchone()
@@ -174,15 +184,46 @@ def cuentaRes():
         mantenimiento = request.form['Mantenimiento']
         divisa = request.form['divisa']
         activacion = request.form['CostoActivacion']
-        ### Ingreso de datos personales
+        cierre = request.form['cierre']
+        Periodo = request.form['Periodo']
+        PeriodoMantenimiento = request.form['PeriodoMantenimiento']
+        montoMantenimiento = request.form['montoMantenimiento']
+
         cur = mysql.connection.cursor()
-        Query = "INSERT INTO cuenta (DNI,storeid,name,perfilimg,lastnameF,lastnameM,telefono,email,Departamento,Distrito,Lote,Manzana,Calle,Numero) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)" 
-        cur.execute(Query,(dni,storeid,name,perfil,lastnameF,lastnameM,phone,email,Departamento,Distrito,lote,Manzana,calle,numeroCasa))
+        ### Ingreso de datos de direccion 
+        QueryDirrecion = "INSERT INTO direccion (Lote, Manzana, Calle,Distrito,NumeroCasa) VALUES(%s,%s,%s,%s,%s)"
+        cur.execute(QueryDirrecion,(lote,Manzana,calle,Distrito,numeroCasa))
         mysql.connection.commit()
-        ### Ingreso de datos de credito
-        sQuery = "INSERT INTO credito (idlinea,tipodetasa,porcentaje,limite,mantenimiento,divisa,activacion) VALUES(%s,%s,%s,%s,%s,%s,%s)"
-        cur.execute(sQuery,(dni,tipoTasa,tasa_porcentaje,limite,mantenimiento,divisa,activacion))
+        ### Interes
+        QueryInteres = "INSERT INTO interes (Cperiodo,TipoInteres,Porcentaje) VALUES(%s,%s,%s)"
+        cur.execute(QueryInteres,(Periodo,tipoTasa,tasa_porcentaje))
         mysql.connection.commit()
+        ### Mantenimiento
+        QueryMantenimiento = "INSERT INTO mantenimiento (Cperiodo,monto) VALUES(%s,%s)"
+        cur.execute(QueryMantenimiento,(PeriodoMantenimiento,montoMantenimiento))
+        mysql.connection.commit()
+        ### Codes de Direecion
+        DataDireccion = "SELECT MAX(cDireccion) FROM direccion"
+        cur.execute(DataDireccion)
+        Cdireccion = cur.fetchone()
+        ### Code Interes
+        DataDireccion = "SELECT MAX(cInteres) FROM Interes" 
+        cur.execute(DataDireccion)
+        CInteres = cur.fetchone()
+        ### Code mantenimiento
+        DataDireccion = "SELECT MAX(cMantenimiento) FROM mantenimiento"
+        cur.execute(DataDireccion)
+        CMantenimiento = cur.fetchone()
+        ### Cliente
+        QueryCliente = "INSERT INTO cliente (dni,direccion,name,lastnameF,lastnameM,phone,correo,imgprofile) VALUES(%s,%s,%s,%s,%s,%s,%s,%s)"
+        cur.execute(QueryCliente,(dni,Cdireccion,name,lastnameF,lastnameM,phone,email,perfil))
+        mysql.connection.commit()
+        ###Inset Cuenta
+        QueryCuenta = "INSERT INTO cuenta (DNI,storeid,Saldo,Cierre,CDivisa,Activacion,Cmantenimiento,Cinteres) VALUES(%s,%s,%s,%s,%s,%s,%s,%s)"
+        cur.execute(QueryCuenta,(dni,storeid,limite,cierre,divisa,activacion,CMantenimiento,CInteres))
+        mysql.connection.commit()
+
+
     return redirect(url_for('main'))
 
 @app.route("/monefay/<string:cuenta>") 

@@ -117,7 +117,7 @@
     <!--contenido de las pestanias -->
     <div class="contenido tab-content" id="pills-tabContent">
       <div class="tab-pane fade show" id="transaccion" role="tabpanel">
-          <button data-toggle="pill" href="#cuenta" id="regreso"></button>
+        <button data-toggle="pill" href="#cuenta" id="regreso">Regresar</button>
       </div>
       <!--seccion 1.1 de la cuenta -->
       <div class="tab-pane fade show active" id="cuenta" role="tabpanel">
@@ -142,7 +142,7 @@
                   <h3>{{datoscuenta.0.15}}</h3>
                   <h3>{{datoscuenta.0.17}}</h3>
                   <h3>{{datoscuenta.0.18}}</h3>
-                  <h3>{{datoscuenta.0.20}}</h3>
+                  <h3 class="mb-4">{{datoscuenta.0.20}}</h3>
                 </div>
               </div>
             </div>
@@ -166,9 +166,10 @@
                   <h3>Salgo actual {{datoscuenta.0.14}}</h3>
                   <h3>Saldo Disponible: {{datoscuenta.0.14}}</h3>
                 </div>
-                <div class="" id="filtro"></div>
-
-                <h3 class="text-left">Movimientos:</h3>
+                <div class="container row  mw-100 mb-3">
+                  <h3 class="col-8 text-left">Movimientos:</h3>
+                  <button class="col-4 btn btn-primary">Ver todos</button>
+                </div>
                 <div class="overflow-auto" style="height: 470px">
                   <table class="table table-striped">
                     <thead class="thead-light">
@@ -176,6 +177,7 @@
                         <th scope="col">#Movimientos</th>
                         <th scope="col">Fecha</th>
                         <th scope="col">Monto</th>
+                        <th scope="col">Detalle</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -184,6 +186,7 @@
                         <th scope="row">1</th>
                         <td>Mark</td>
                         <td>Otto</td>
+                        <td><button>ver detalle</button></td>
                       </tr>
                     </tbody>
                   </table>
@@ -195,10 +198,24 @@
               <div class="modal-content">
                 <div class="row">
                   <div class="col container justify-content-center mt-3 mb-3">
-                    <button class="col-12 btn-lg btn-secondary" OnClick="pasar()" id="cobrar">Cobrar</button>
+                    <button
+                      class="col-12 btn-lg btn-secondary"
+                      OnClick="pasar()"
+                      id="cobrar"
+                    >
+                      Cobrar
+                    </button>
                   </div>
                   <div class="col container justify-content-center mt-3 mb-3">
-                    <button class="col-12 btn-lg btn-primary" data-toggle="pill" href="#transaccion" id="retiro" OnClick="pasar()" >Retiro</button>
+                    <button
+                      class="col-12 btn-lg btn-primary"
+                      data-toggle="pill"
+                      href="#transaccion"
+                      id="retiro"
+                      OnClick="pasar()"
+                    >
+                      Retiro
+                    </button>
                   </div>
                 </div>
               </div>
