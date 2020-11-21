@@ -116,9 +116,21 @@
 
     <!--contenido de las pestanias -->
     <div class="contenido tab-content" id="pills-tabContent">
-      <div class="tab-pane fade show" id="transaccion" role="tabpanel">
-        <button data-toggle="pill" href="#cuenta" id="regreso">Regresar</button>
+      <!--Pantalla de retiro-->
+      <div class="tab-pane fade show" id="transaccionRetiro" role="tabpanel">
+        <button data-toggle="pill" href="#cuenta" id="regresoRetiro">
+          Regresar
+        </button>
+        <div class="row mw-100"></div>
       </div>
+      <!--Pantalla de cobro-->
+      <div class="tab-pane fade show" id="transaccionCobro" role="tabpanel">
+        <button data-toggle="pill" href="#cuenta" id="regresoCobro">
+          Regresar
+        </button>
+        <div class="row mw-100"></div>
+      </div>
+
       <!--seccion 1.1 de la cuenta -->
       <div class="tab-pane fade show active" id="cuenta" role="tabpanel">
         <div class="row mw-100">
@@ -128,21 +140,21 @@
               <div class="modal-content">
                 <div class="container col-8 justify-content-center">
                   <img
-                    src="../static/img/{{datoscuenta.0.2}}"
+                    src="../static/img/{{datoscuenta.0.3}}"
                     class="img-fluid mt-2"
                   />
                 </div>
 
                 <div class="LetrasCrear mt-3">
                   <h3>
-                    {{datoscuenta.0.3}} {{datoscuenta.0.4}} {{datoscuenta.0.5}}
+                    {{datoscuenta.0.0}} {{datoscuenta.0.1}} {{datoscuenta.0.2}}
                   </h3>
-                  <h3>Telefono: {{datoscuenta.0.6}}</h3>
-                  <h3>{{datoscuenta.0.14}}</h3>
-                  <h3>{{datoscuenta.0.15}}</h3>
-                  <h3>{{datoscuenta.0.17}}</h3>
-                  <h3>{{datoscuenta.0.18}}</h3>
-                  <h3 class="mb-4">{{datoscuenta.0.20}}</h3>
+                  <h3>Telefono: {{datoscuenta.0.4}}</h3>
+                  <h3>{{datoscuenta.0.5}}</h3>
+                  <h3>{{datoscuenta.0.6}}</h3>
+                  <h3>{{datoscuenta.0.7}}</h3>
+                  <h3>{{datoscuenta.0.8}}</h3>
+                  <h3 class="mb-4">{{datoscuenta.0.9}}</h3>
                 </div>
               </div>
             </div>
@@ -163,10 +175,10 @@
             <div class="main-section mr-2">
               <div class="modal-content LetrasCrear">
                 <div class="mt-2">
-                  <h3>Salgo actual {{datoscuenta.0.14}}</h3>
-                  <h3>Saldo Disponible: {{datoscuenta.0.14}}</h3>
+                  <h3>Salgo actual {{datoscuenta.0.5}}</h3>
+                  <h3>Saldo Disponible: {{datoscuenta.0.5}}</h3>
                 </div>
-                <div class="container row  mw-100 mb-3">
+                <div class="container row mw-100 mb-3">
                   <h3 class="col-8 text-left">Movimientos:</h3>
                   <button class="col-4 btn btn-primary">Ver todos</button>
                 </div>
@@ -200,6 +212,8 @@
                   <div class="col container justify-content-center mt-3 mb-3">
                     <button
                       class="col-12 btn-lg btn-secondary"
+                      data-toggle="pill"
+                      href="#transaccionCobro"
                       OnClick="pasar()"
                       id="cobrar"
                     >
@@ -210,7 +224,7 @@
                     <button
                       class="col-12 btn-lg btn-primary"
                       data-toggle="pill"
-                      href="#transaccion"
+                      href="#transaccionRetiro"
                       id="retiro"
                       OnClick="pasar()"
                     >
@@ -582,6 +596,7 @@
         </div>
       </div>
       <!--seccion 3-->
+      <!--Dias de cobro-->
       <div class="tab-pane fade" role="tabpanel" id="pills-contact"></div>
     </div>
 

@@ -34,16 +34,17 @@ def main():
     if 'email' in session:
         cur = mysql.connection.cursor()
         # Busca los clientes
-        # cur.execute('SELECT Cu.DNI, Cu.name, Cu.perfilimg, Cre.limite FROM cuenta Cu, credito Cre WHERE Cu.storeid = %s and Cu.DNI = Cre.idlinea', [session['email']])
-        # data = cur.fetchall()
-        # return render_template('monefay.html', datos = data)
+        QueryClientes = "SELECT CL.DNI,CL.name,CL.imgprofile,CU.Saldo FROM cliente CL, cuenta CU WHERE CU.storeid = %s and CU.DNI = CL.dni"
+        cur.execute(QueryClientes,[session['email']])
+        dato = cur.fetchall()
+        ### tabla de divisas
         Query="SELECT * FROM divisa"
         cur.execute(Query)
         divisa = cur.fetchall()
-
+        ## Tabla de periodos
         cur.execute("SELECT * FROM periododepago")
         Periodo = cur.fetchall()
-        return render_template('monefay.html',divisas = divisa,Periodos = Periodo)
+        return render_template('monefay.html',divisas = divisa,Periodos = Periodo, datos = dato)
     else:
         return render_template('Landing.html')
 
@@ -139,12 +140,14 @@ def loginin():
 
             
     return redirect(url_for('main'))
+
 @app.route("/delete/<string:cuenta>")
 def delete(cuenta):
-    cur = mysql.connection.cursor()
-    cur.execute('DELETE FROM cuenta WHERE DNI = {0}'.format(cuenta))
-    mysql.connection.commit()
+    # cur = mysql.connection.cursor()
+    # cur.execute('DELETE FROM cuenta WHERE DNI = {0}'.format(cuenta))
+    # mysql.connection.commit()
     return redirect(url_for('main'))
+
 ### Registrar cuenta 
 @app.route("/cuentaRes",methods=['POST','GET'])
 def cuentaRes():
@@ -155,8 +158,8 @@ def cuentaRes():
         dni = request.form['dni']
         cur = mysql.connection.cursor()
         ### Consumo de tabla cuenta
-        query = "SELECT DNI FROM cuenta WHERE DNI = %s"
-        cur.execute(query,[dni])
+        query = "SELECT DNI FROM cuenta WHERE DNI = %s and storeid = %s"
+        cur.execute(query,[dni,session['email']])
         cuenta = cur.fetchone()
         cur.close()
         if(cuenta != None):
@@ -181,7 +184,6 @@ def cuentaRes():
         tipoTasa = request.form['tipoTasa']
         tasa_porcentaje = request.form['porcentTasa']
         limite = request.form['limite']
-        mantenimiento = request.form['Mantenimiento']
         divisa = request.form['divisa']
         activacion = request.form['CostoActivacion']
         cierre = request.form['cierre']
@@ -230,11 +232,10 @@ def cuentaRes():
 def cuenta(cuenta):
     cur = mysql.connection.cursor()
     ## Obtiene los datos de una cuenta
-    query = "SELECT Cu.*, Cre.limite, Cre.tipodetasa, Cre.porcentaje,Cre.Mantenimiento,Cre.divisa,Cre.activacion,Cre.fechaCreacion FROM cuenta Cu, credito Cre WHERE Cu.DNI = %s and Cu.DNI = Cre.idlinea"
-    cur.execute(query,[cuenta])
+    queryCliente = "SELECT CL.name,CL.lastnameF,CL.lastnameM,CL.imgprofile,CL.phone,CU.Saldo,inte.TipoInteres,PER.Periodo,DIVI.TipoDivisa,CU.Contratado FROM cuenta CU JOIN cliente CL ON CU.dni = CL.DNI JOIN interes inte ON CU.Cinteres = inte.CInteres JOIN mantenimiento man ON CU.Cmantenimiento = man.CMantenimiento JOIN periododepago PER ON inte.CPeriodo = PER.CPeriodo JOIN divisa DIVI ON CU.CDivisa = DIVI.CDivisa WHERE CU.dni = %s"
+    cur.execute(queryCliente,[cuenta])
     datosCuenta = cur.fetchall()
-    print(datosCuenta)
-    return render_template('monefaycuenta.html', datoscuenta = datosCuenta)
+    return render_template('monefaycuenta.html',datoscuenta = datosCuenta)
 ### Funcion para salir
 @app.route("/salir")
 def salir():

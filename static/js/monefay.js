@@ -37,8 +37,10 @@ function confirmar() {
 function pasar() {
   Cobrar = document.getElementById("cobrar");
   Retiro = document.getElementById("retiro");
-  Regreso = document.getElementById("regreso");
+  RegresoCobro = document.getElementById("regresoCobro");
+  RegresoRetiro = document.getElementById("regresoRetiro");
   Cobrar.classList.remove("active");
   Retiro.classList.remove("active");
-  Regreso.classList.remove("active");
+  RegresoCobro.classList.remove("active");
+  RegresoRetiro.classList.remove("active");
 }

@@ -130,12 +130,15 @@
       >
         <!--filtro-->
         <nav class="">navigation links</nav>
-        {%with messages = get_flashed_messages(with_categories=true)%} {%if
-        messages%} {%for category, message in messages%}
+        {%with messages = get_flashed_messages(with_categories=true)%}
+        {%if messages%} 
+        {%for category, message in messages%}
         <div class="alert {{ category }} " role="alert" id="idMensajeError">
           <h4 class="text-center">{{ message }}</h4>
         </div>
-        {%endfor%} {%endif%} {%endwith%}
+        {%endfor%} 
+        {%endif%} 
+        {%endwith%}
         <!--cajas -->
         <div class="container mw-100 mt-4">
           <div class="row mw-100">
@@ -444,27 +447,32 @@
                 <div class="container">
                   <div class="main-section">
                     <div class="modal-content">
-                      <div>
-                        <h3 class="LetrasCrear mt-3">Tipo de tasa</h3>
-                        <div class="form-group" id="user-group">
-                          <select name="tipoTasa" class="form-control">
-                            <option value="Tasa Nominal">Tasa Nominal</option>
-                            <option value="Tasa Efectiva">Tasa Efectiva</option>
-                          </select>
+                      <div class="row">
+                        <div class="col">
+                          <h3 class="LetrasCrear mt-3">Tipo de tasa</h3>
+                          <div class="form-group" id="user-group">
+                            <select name="tipoTasa" class="form-control">
+                              <option value="Tasa Nominal">Tasa Nominal</option>
+                              <option value="Tasa Efectiva">
+                                Tasa Efectiva
+                              </option>
+                            </select>
+                          </div>
                         </div>
-                      </div>
-
-                      <div>
-                        <h3 class="LetrasCrear">Porcentaje de interes</h3>
-                        <div class="form-group" id="user-group">
-                          <!--required=""-->
-                          <input
-                            type="text"
-                            class="form-control"
-                            placeholder="Porcentaje"
-                            pattern="[0-9]+"
-                            name="porcentTasa"
-                          />
+                        <div class="col">
+                          <h3 class="LetrasCrear mt-3">
+                            Porcentaje de interes
+                          </h3>
+                          <div class="form-group" id="user-group">
+                            <!--required=""-->
+                            <input
+                              type="text"
+                              class="form-control"
+                              placeholder="Porcentaje"
+                              pattern="[0-9]+"
+                              name="porcentTasa"
+                            />
+                          </div>
                         </div>
                       </div>
                       <div>
@@ -480,30 +488,37 @@
                           />
                         </div>
                       </div>
-                      <div>
-                        <h3 class="LetrasCrear">Monto de mantenimiento</h3>
-                        <div class="form-group" id="user-group">
-                          <!--required=""-->
-                          <input
-                            type="text"
-                            class="form-control"
-                            placeholder="Monto de Mantenimiento"
-                            pattern="[0-9]+"
-                            name="montoMantenimiento"
-                          />
+                      <div class="row">
+                        <div class="col">
+                          <h3 class="LetrasCrear">Periodo Mantenimiento</h3>
+                          <div class="form-group" id="user-group">
+                            <select
+                              class="form-control"
+                              name="PeriodoMantenimiento"
+                            >
+                              {%for Periodo in Periodos%}
+                              <option value="{{Periodo.0}}">
+                                {{Periodo.1}}
+                              </option>
+                              {%endfor%}
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <h3 class="LetrasCrear">Monto de mantenimiento</h3>
+                          <div class="form-group" id="user-group">
+                            <!--required=""-->
+                            <input
+                              type="text"
+                              class="form-control"
+                              placeholder="Monto de Mantenimiento"
+                              pattern="[0-9]+"
+                              name="montoMantenimiento"
+                            />
+                          </div>
                         </div>
                       </div>
-                      <div>
-                        <h3 class="LetrasCrear">Mantenimiento de cuenta</h3>
-                        <div class="form-group" id="user-group">
-                          <select name="Mantenimiento" class="form-control">
-                            <option value="Diario">Diario</option>
-                            <option value="Semanal">Semanal</option>
-                            <option value="Mensual">Mensual</option>
-                            <option value="Anual">Anual</option>
-                          </select>
-                        </div>
-                      </div>
+
                       <div>
                         <h3 class="LetrasCrear">Tipo de divisa</h3>
                         <div class="form-group" id="user-group">
@@ -514,6 +529,7 @@
                           </select>
                         </div>
                       </div>
+
                       <div>
                         <h3 class="LetrasCrear">Periodo Interes</h3>
                         <div class="form-group" id="user-group">
@@ -524,41 +540,34 @@
                           </select>
                         </div>
                       </div>
-                      <div>
-                        <h3 class="LetrasCrear">Periodo Mantenimiento</h3>
-                        <div class="form-group" id="user-group">
-                          <select class="form-control" name="PeriodoMantenimiento">
-                            {%for Periodo in Periodos%}
-                            <option value="{{Periodo.0}}">{{Periodo.1}}</option>
-                            {%endfor%}
-                          </select>
+                      <div class="row">
+                        <div class="col">
+                          <h3 class="LetrasCrear">Costo de activacion</h3>
+                          <div class="form-group" id="user-group">
+                            <!--required=""-->
+                            <input
+                              type="text"
+                              class="form-control"
+                              placeholder="Costo de activacion"
+                              pattern="[0-9]+"
+                              name="CostoActivacion"
+                            />
+                          </div>
+                        </div>
+                        <div class="col">
+                          <h3 class="LetrasCrear">Fecha de cierre</h3>
+                          <div class="form-group">
+                            <!--required=""-->
+                            <input
+                              type="date"
+                              name="cierre"
+                              min="2018-01-01"
+                              max="2018-12-31"
+                            />
+                          </div>
                         </div>
                       </div>
-                      <div>
-                        <h3 class="LetrasCrear">Fecha de cierre</h3>
-                        <div class="form-group">
-                          <!--required=""-->
-                          <input
-                            type="date"
-                            name="cierre"
-                            min="2018-01-01"
-                            max="2018-12-31"
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <h3 class="LetrasCrear">Costo de activacion</h3>
-                        <div class="form-group" id="user-group">
-                          <!--required=""-->
-                          <input
-                            type="text"
-                            class="form-control"
-                            placeholder="Costo de activacion"
-                            pattern="[0-9]+"
-                            name="CostoActivacion"
-                          />
-                        </div>
-                      </div>
+
                       <h2 class="text-center LetrasCrear">Crear cuenta</h2>
                       <!-- Button trigger modal -->
                       <div class="row text-center mb-4">
