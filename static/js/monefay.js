@@ -39,6 +39,7 @@ function pasar() {
   Retiro = document.getElementById("retiro");
   RegresoCobro = document.getElementById("regresoCobro");
   RegresoRetiro = document.getElementById("regresoRetiro");
+
   Cobrar.classList.remove("active");
   Retiro.classList.remove("active");
   RegresoCobro.classList.remove("active");

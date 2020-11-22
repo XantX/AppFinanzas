@@ -118,17 +118,144 @@
     <div class="contenido tab-content" id="pills-tabContent">
       <!--Pantalla de retiro-->
       <div class="tab-pane fade show" id="transaccionRetiro" role="tabpanel">
-        <button data-toggle="pill" href="#cuenta" id="regresoRetiro">
-          Regresar
-        </button>
-        <div class="row mw-100"></div>
+        <div class="container">
+          <div class="main-section text-center">
+            <div class="modal-content">
+              <!--Contenido-->
+              <form class="LetrasCrear" action="/retiro" method="POST">
+                <h1 id="disponible">Saldo disponible: {{datoscuenta.0.5}}</h1>
+                <input
+                  type="text"
+                  value="{{datoscuenta.0.12}}"
+                  name="dni"
+                  style="display: none"
+                />
+                <input
+                  type="text"
+                  value="{{datoscuenta.0.10}}"
+                  name="id"
+                  style="display: none"
+                />
+                <div class="form-group">
+                  <h2>Descripcion de productos retirado</h2>
+                  <textarea
+                    class="form-control"
+                    placeholder="Descripcion"
+                    name="DescripcionDeRetiro"
+                    rows="3"
+                  ></textarea>
+                </div>
+
+                <h2>Monto que se va a pagar</h2>
+                <div class="form-group">
+                  <input
+                    class="form-control"
+                    type="text"
+                    placeholder="Monto pagado"
+                    id="MontoRetiro"
+                    name="MontoRetiro"
+                  />
+                </div>
+                <div class="form-group mb-3 mt-3">
+                  <div class="container row">
+                    <div class="col">
+                      <button
+                        class="col-12 btn btn-primary"
+                        data-toggle="pill"
+                        href="#cuenta"
+                        id="regresoRetiro"
+                        OnClick="pasar()"
+                      >
+                        Regresar
+                      </button>
+                    </div>
+                    <div class="col">
+                      <button
+                        type="submit"
+                        class="col-12 btn btn-primary"
+                        id="RetiroConfirm"
+                      >
+                        Confirmar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
+
       <!--Pantalla de cobro-->
       <div class="tab-pane fade show" id="transaccionCobro" role="tabpanel">
-        <button data-toggle="pill" href="#cuenta" id="regresoCobro">
-          Regresar
-        </button>
-        <div class="row mw-100"></div>
+        <div class="row mw-100 LetrasCrear">
+          <div class="container">
+            <div class="main-section text-center">
+              <div class="modal-content">
+                <!--Contenido-->
+                <form action="/cobro" method="post">
+                  <h1 id="Cantcobro">Monto a pagar:</h1>
+                  <input
+                    type="text"
+                    value="{{datoscuenta.0.12}}"
+                    name="dni"
+                    style="display: none"
+                  />
+                  <input
+                    type="text"
+                    value="{{datoscuenta.0.10}}"
+                    name="id"
+                    style="display: none"
+                  />
+                  <div class="form-group">
+                    <h2>Descripcion monto cobrado</h2>
+                    <textarea
+                      class="form-control"
+                      id="DescripcionDeCobro"
+                      placeholder="Descripcion"
+                      name="DescripcionDeCobro"
+                      rows="3"
+                    ></textarea>
+                  </div>
+                  <div class="form-group">
+                    <h2>Monto que se pago</h2>
+                    <input
+                      class="form-control"
+                      type="text"
+                      placeholder="Monto pagado"
+                      id="MontoCobro"
+                      name="MontoCobro"
+                    />
+                  </div>
+                  <div class="form-group mb-3 mt-3">
+                    <div class="row">
+                      <div class="col container">
+                        <button
+                          class="col-12 btn btn-primary"
+                          data-toggle="pill"
+                          href="#cuenta"
+                          id="regresoCobro"
+                          OnClick="pasar()"
+                        >
+                          Regresar
+                        </button>
+                      </div>
+                      <div class="col container">
+                        <button
+                          class="col-12 btn btn-primary"
+                          type="submit"
+                          id="Confirmar"
+                        >
+                          Confirmar
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!--seccion 1.1 de la cuenta -->
@@ -175,8 +302,10 @@
             <div class="main-section mr-2">
               <div class="modal-content LetrasCrear">
                 <div class="mt-2">
-                  <h3>Salgo actual {{datoscuenta.0.5}}</h3>
-                  <h3>Saldo Disponible: {{datoscuenta.0.5}}</h3>
+                  <h3 id="Saldodisponible">
+                    Saldo actual: {{datoscuenta.0.5}}
+                  </h3>
+                  <h3>Limite de cuenta: {{datoscuenta.0.11}}</h3>
                 </div>
                 <div class="container row mw-100 mb-3">
                   <h3 class="col-8 text-left">Movimientos:</h3>
@@ -194,12 +323,22 @@
                     </thead>
                     <tbody>
                       <!--aqui se usara la tabla de movimientos-->
-                      <tr class="table-light">
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
+                      {%for movimiento in movimientos %} {%if movimiento.6 ==
+                      1%}
+                      <tr class="table-danger">
+                        <th scope="row">{{movimiento.0}}</th>
+                        <td>{{movimiento.5}}</td>
+                        <td>{{movimiento.4}}</td>
                         <td><button>ver detalle</button></td>
                       </tr>
+                      {%endif%} {%if movimiento.6 == 0%}
+                      <tr class="table-success">
+                        <th scope="row">{{movimiento.0}}</th>
+                        <td>{{movimiento.5}}</td>
+                        <td>{{movimiento.4}}</td>
+                        <td><button>ver detalle</button></td>
+                      </tr>
+                      {%endif%} {%endfor%}
                     </tbody>
                   </table>
                 </div>
@@ -214,8 +353,8 @@
                       class="col-12 btn-lg btn-secondary"
                       data-toggle="pill"
                       href="#transaccionCobro"
-                      OnClick="pasar()"
                       id="cobrar"
+                      OnClick="pasar()"
                     >
                       Cobrar
                     </button>
@@ -505,72 +644,124 @@
                 <div class="container">
                   <div class="main-section">
                     <div class="modal-content">
-                      <div>
-                        <h3 class="LetrasCrear mt-3">Tipo de tasa</h3>
-                        <div class="form-group" id="user-group">
-                          <select name="tipoTasa" class="form-control">
-                            <option value="Tasa Nominal">Tasa Nominal</option>
-                            <option value="Tasa Efectiva">Tasa Efectiva</option>
-                          </select>
+                      <div class="row">
+                        <div class="col">
+                          <h3 class="LetrasCrear mt-3">Tipo de tasa</h3>
+                          <div class="form-group" id="user-group">
+                            <select name="tipoTasa" class="form-control">
+                              <option value="Tasa Nominal">Tasa Nominal</option>
+                              <option value="Tasa Efectiva">
+                                Tasa Efectiva
+                              </option>
+                            </select>
+                          </div>
                         </div>
-                      </div>
-
-                      <div>
-                        <h3 class="LetrasCrear">Porcentaje de interes</h3>
-                        <div class="form-group" id="user-group">
-                          <input
-                            type="text"
-                            class="form-control"
-                            placeholder="Porcentaje"
-                            required=""
-                            pattern="[0-9]+"
-                            name="porcentTasa"
-                          />
+                        <div class="col">
+                          <h3 class="LetrasCrear mt-3">
+                            Porcentaje de interes
+                          </h3>
+                          <div class="form-group" id="user-group">
+                            <!--required=""-->
+                            <input
+                              type="text"
+                              class="form-control"
+                              placeholder="Porcentaje"
+                              pattern="[0-9]+"
+                              name="porcentTasa"
+                            />
+                          </div>
                         </div>
                       </div>
                       <div>
                         <h3 class="LetrasCrear">Limite de la linea</h3>
                         <div class="form-group" id="user-group">
+                          <!--required=""-->
                           <input
                             type="text"
                             class="form-control"
                             placeholder="Limite de la linea"
                             pattern="[0-9]+"
-                            required=""
                             name="limite"
                           />
                         </div>
                       </div>
-                      <div>
-                        <h3 class="LetrasCrear">Mantenimiento de cuenta</h3>
-                        <div class="form-group" id="user-group">
-                          <select name="Mantenimiento" class="form-control">
-                            <option value="Diario">Diario</option>
-                            <option value="Semanal">Semanal</option>
-                            <option value="Mensual">Mensual</option>
-                            <option value="Anual">Anual</option>
-                          </select>
+                      <div class="row">
+                        <div class="col">
+                          <h3 class="LetrasCrear">Periodo Mantenimiento</h3>
+                          <div class="form-group" id="user-group">
+                            <select
+                              class="form-control"
+                              name="PeriodoMantenimiento"
+                            >
+                              {%for Periodo in Periodos%}
+                              <option value="{{Periodo.0}}">
+                                {{Periodo.1}}
+                              </option>
+                              {%endfor%}
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <h3 class="LetrasCrear">Monto de mantenimiento</h3>
+                          <div class="form-group" id="user-group">
+                            <!--required=""-->
+                            <input
+                              type="text"
+                              class="form-control"
+                              placeholder="Monto de Mantenimiento"
+                              pattern="[0-9]+"
+                              name="montoMantenimiento"
+                            />
+                          </div>
                         </div>
                       </div>
+
                       <div>
                         <h3 class="LetrasCrear">Tipo de divisa</h3>
                         <div class="form-group" id="user-group">
                           <select class="form-control" name="divisa">
-                            <option value="Soles">Soles</option>
-                            <option value="Dolares">Dolares</option>
+                            {%for divisa in divisas%}
+                            <option value="{{divisa.0}}">{{divisa.1}}</option>
+                            {%endfor%}
                           </select>
                         </div>
                       </div>
+
                       <div>
-                        <h3 class="LetrasCrear">Costo de activacion</h3>
+                        <h3 class="LetrasCrear">Periodo Interes</h3>
                         <div class="form-group" id="user-group">
-                          <input
-                            type="text"
-                            class="form-control"
-                            placeholder="Costo de activacion"
-                            pattern="[0-9]+"
-                            name="CostoActivacion"
-                          />
+                          <select class="form-control" name="Periodo">
+                            {%for Periodo in Periodos%}
+                            <option value="{{Periodo.0}}">{{Periodo.1}}</option>
+                            {%endfor%}
+                          </select>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col">
+                          <h3 class="LetrasCrear">Costo de activacion</h3>
+                          <div class="form-group" id="user-group">
+                            <!--required=""-->
+                            <input
+                              type="text"
+                              class="form-control"
+                              placeholder="Costo de activacion"
+                              pattern="[0-9]+"
+                              name="CostoActivacion"
+                            />
+                          </div>
+                        </div>
+                        <div class="col">
+                          <h3 class="LetrasCrear">Fecha de cierre</h3>
+                          <div class="form-group">
+                            <!--required=""-->
+                            <input
+                              type="date"
+                              name="cierre"
+                              min="2018-01-01"
+                              max="2018-12-31"
+                            />
+                          </div>
                         </div>
                       </div>
                       <h2 class="text-center LetrasCrear">Crear cuenta</h2>

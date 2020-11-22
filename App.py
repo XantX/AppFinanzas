@@ -34,7 +34,7 @@ def main():
     if 'email' in session:
         cur = mysql.connection.cursor()
         # Busca los clientes
-        QueryClientes = "SELECT CL.DNI,CL.name,CL.imgprofile,CU.Saldo FROM cliente CL, cuenta CU WHERE CU.storeid = %s and CU.DNI = CL.dni"
+        QueryClientes = "SELECT CL.DNI,CL.name,CL.imgprofile,CU.Saldo FROM cliente CL, cuenta CU WHERE CU.storeid = %s and CU.idcliente = CL.id"
         cur.execute(QueryClientes,[session['email']])
         dato = cur.fetchall()
         ### tabla de divisas
@@ -143,9 +143,13 @@ def loginin():
 
 @app.route("/delete/<string:cuenta>")
 def delete(cuenta):
-    # cur = mysql.connection.cursor()
-    # cur.execute('DELETE FROM cuenta WHERE DNI = {0}'.format(cuenta))
-    # mysql.connection.commit()
+    cur = mysql.connection.cursor()
+    querySearchCliente = "SELECT cu.idcliente FROM cliente cl, cuenta cu WHERE cl.dni = %s and cu.storeid = %s"
+    cur.execute(querySearchCliente,[cuenta,session['email']])
+    ident = cur.fetchone()
+    print("El datos es:",ident)
+    cur.execute('DELETE FROM cuenta WHERE idcliente = {0}'.format(ident[0]))
+    mysql.connection.commit()
     return redirect(url_for('main'))
 
 ### Registrar cuenta 
@@ -158,7 +162,7 @@ def cuentaRes():
         dni = request.form['dni']
         cur = mysql.connection.cursor()
         ### Consumo de tabla cuenta
-        query = "SELECT DNI FROM cuenta WHERE DNI = %s and storeid = %s"
+        query = "SELECT cl.dni FROM cliente cl, cuenta cu WHERE cl.dni = %s and cu.storeid = %s"
         cur.execute(query,[dni,session['email']])
         cuenta = cur.fetchone()
         cur.close()
@@ -220,9 +224,13 @@ def cuentaRes():
         QueryCliente = "INSERT INTO cliente (dni,direccion,name,lastnameF,lastnameM,phone,correo,imgprofile) VALUES(%s,%s,%s,%s,%s,%s,%s,%s)"
         cur.execute(QueryCliente,(dni,Cdireccion,name,lastnameF,lastnameM,phone,email,perfil))
         mysql.connection.commit()
+        ### Code Cliente
+        DataCliente = "SELECT MAX(id) FROM cliente"
+        cur.execute(DataCliente)
+        CCliente = cur.fetchone()
         ###Inset Cuenta
-        QueryCuenta = "INSERT INTO cuenta (DNI,storeid,Saldo,Cierre,CDivisa,Activacion,Cmantenimiento,Cinteres) VALUES(%s,%s,%s,%s,%s,%s,%s,%s)"
-        cur.execute(QueryCuenta,(dni,storeid,limite,cierre,divisa,activacion,CMantenimiento,CInteres))
+        QueryCuenta = "INSERT INTO cuenta (idcliente,storeid,Saldo,Cierre,CDivisa,Activacion,Cmantenimiento,Cinteres,limite) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+        cur.execute(QueryCuenta,(CCliente,storeid,limite,cierre,divisa,activacion,CMantenimiento,CInteres,limite))
         mysql.connection.commit()
 
 
@@ -231,11 +239,66 @@ def cuentaRes():
 @app.route("/monefay/<string:cuenta>") 
 def cuenta(cuenta):
     cur = mysql.connection.cursor()
+    ### Tabla de movimientos
+    QueryMovimientos = "SELECT * FROM movimiento WHERE Cliente = %s and Usuario = %s"
+    cur.execute(QueryMovimientos,[cuenta,session['email']])
+    movimiento = cur.fetchall()
+    print(movimiento)
+    ### tabla de divisas
+    Query="SELECT * FROM divisa"
+    cur.execute(Query)
+    divisa = cur.fetchall()
+    ## Tabla de periodos
+    cur.execute("SELECT * FROM periododepago")
+    Periodo = cur.fetchall()
     ## Obtiene los datos de una cuenta
-    queryCliente = "SELECT CL.name,CL.lastnameF,CL.lastnameM,CL.imgprofile,CL.phone,CU.Saldo,inte.TipoInteres,PER.Periodo,DIVI.TipoDivisa,CU.Contratado FROM cuenta CU JOIN cliente CL ON CU.dni = CL.DNI JOIN interes inte ON CU.Cinteres = inte.CInteres JOIN mantenimiento man ON CU.Cmantenimiento = man.CMantenimiento JOIN periododepago PER ON inte.CPeriodo = PER.CPeriodo JOIN divisa DIVI ON CU.CDivisa = DIVI.CDivisa WHERE CU.dni = %s"
+    queryCliente = "SELECT CL.name,CL.lastnameF,CL.lastnameM,CL.imgprofile,CL.phone,CU.Saldo,inte.TipoInteres,PER.Periodo,DIVI.TipoDivisa,CU.Contratado,CU.id,CU.limite,CL.dni FROM cuenta CU JOIN cliente CL ON CU.idcliente = CL.id JOIN interes inte ON CU.Cinteres = inte.CInteres JOIN mantenimiento man ON CU.Cmantenimiento = man.CMantenimiento JOIN periododepago PER ON inte.CPeriodo = PER.CPeriodo JOIN divisa DIVI ON CU.CDivisa = DIVI.CDivisa WHERE CL.dni = %s"
     cur.execute(queryCliente,[cuenta])
     datosCuenta = cur.fetchall()
-    return render_template('monefaycuenta.html',datoscuenta = datosCuenta)
+    return render_template('monefaycuenta.html',datoscuenta = datosCuenta,divisas = divisa,Periodos = Periodo,movimientos = movimiento)
+
+### Funcion de retiro
+@app.route("/retiro", methods=['POST','GET'])
+def retiro():
+    if request.method == 'POST':
+        dni = request.form['dni']
+        id = request.form['id']
+        texto = request.form['DescripcionDeRetiro']
+        monto = request.form['MontoRetiro']
+
+        cur = mysql.connection.cursor()
+        ### Se agrega un movimiento
+        QueryMovimiento = "INSERT INTO movimiento (idcliente,Cliente,Usuario,Monto,TipoDeMovimiento,descripcion) VALUES(%s,%s,%s,%s,%s,%s)"
+        cur.execute(QueryMovimiento,(id,dni,session['email'],monto,1,texto))
+        mysql.connection.commit()
+        ### Se hace el calculo de el saldo
+        QueryUpdate = "UPDATE cuenta SET Saldo = Saldo - %s WHERE id = %s"
+        cur.execute(QueryUpdate,[monto,id])
+        mysql.connection.commit()
+        direccion = "/monefay/" + dni
+    return redirect(direccion) 
+
+### Funcion Cobro    
+@app.route("/cobro",methods=['POST','GET'])
+def Cobro():
+    if request.method == 'POST':
+        dni = request.form['dni']
+        id = request.form['id']
+        texto = request.form['DescripcionDeCobro']
+        monto = request.form['MontoCobro']
+
+        cur = mysql.connection.cursor()
+        ### Insertar movimiento
+        QueryMovimiento = "INSERT INTO movimiento (idcliente,Cliente,Usuario,Monto,TipoDeMovimiento,descripcion) VALUES(%s,%s,%s,%s,%s,%s)"
+        cur.execute(QueryMovimiento,(id,dni,session['email'],monto,0,texto))
+        mysql.connection.commit()
+
+        ### Se hace el calculo de el saldo
+        QueryUpdate = "UPDATE cuenta SET Saldo = Saldo + %s WHERE id = %s"
+        cur.execute(QueryUpdate,[monto,id])
+        mysql.connection.commit()
+        direccion = "/monefay/" + dni
+    return redirect(direccion) 
 ### Funcion para salir
 @app.route("/salir")
 def salir():
