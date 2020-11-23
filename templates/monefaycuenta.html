@@ -57,7 +57,7 @@
               height="90"
             />
           </a>
-          <h1 class="ml-4 mt-4">Hola {{ session["email"] }}</h1>
+          <h1 class="ml-4 mt-4">Hola {{ session["store"] }}</h1>
         </div>
         <div class="navbar-collapse justify-content-center">
           <form action="/salir">
@@ -123,7 +123,7 @@
             <div class="modal-content">
               <!--Contenido-->
               <form class="LetrasCrear" action="/retiro" method="POST">
-                <h1 id="disponible">Saldo disponible: {{datoscuenta.0.5}}</h1>
+                <h1 id="disponible">Saldo disponible: {{ saldo }}</h1>
                 <input
                   type="text"
                   value="{{datoscuenta.0.12}}"
@@ -194,7 +194,22 @@
               <div class="modal-content">
                 <!--Contenido-->
                 <form action="/cobro" method="post">
-                    <h1 id="Cantcobro">Monto a pagar: {{deuda}}</h1>
+                  <h1 id="Cantcobro">Monto a pagar: {{ deuda }}</h1>
+
+                  {%with messages = get_flashed_messages(with_categories=true)%}
+                  {%if messages%} 
+                  {%for category, message in messages%}
+                  <div
+                    class="alert {{ category }}"
+                    role="alert"
+                    id="idMensajeError"
+                  >
+                    <h4 class="">{{ message }}</h4>
+                  </div>
+                  {%endfor%} 
+                  {%endif%} 
+                  {%endwith%}
+
                   <input
                     type="text"
                     value="{{datoscuenta.0.12}}"
@@ -302,10 +317,9 @@
             <div class="main-section mr-2">
               <div class="modal-content LetrasCrear">
                 <div class="mt-2">
-                  <h3 id="Saldodisponible">
-                    Saldo actual: {{datoscuenta.0.5}}
-                  </h3>
+                  <h3 id="Saldodisponible">Saldo actual: {{ saldo }}</h3>
                   <h3>Limite de cuenta: {{datoscuenta.0.11}}</h3>
+                  
                 </div>
                 <div class="container row mw-100 mb-3">
                   <h3 class="col-8 text-left">Movimientos:</h3>
@@ -323,25 +337,22 @@
                     </thead>
                     <tbody>
                       <!--aqui se usara la tabla de movimientos-->
-                      {%set counter = 0%}
-                      {%for movimiento in movimientos %} 
+                      {%set counter = 0%} {%for movimiento in movimientos %}
                       {%if movimiento.6 ==1%}
                       <tr class="table-danger">
-                          <th scope="row">{{counter + loop.index0}}</th>
+                        <th scope="row">{{ counter + loop.index0 }}</th>
                         <td>{{movimiento.5}}</td>
                         <td>-{{movimiento.4}}</td>
                         <td><button>ver detalle</button></td>
                       </tr>
-                      {%endif%}
-                      {%if movimiento.6 == 0%}
+                      {%endif%} {%if movimiento.6 == 0%}
                       <tr class="table-success">
-                        <th scope="row">{{counter + loop.index0}}</th>
+                        <th scope="row">{{ counter + loop.index0 }}</th>
                         <td>{{movimiento.5}}</td>
                         <td>{{movimiento.4}}</td>
                         <td><button>ver detalle</button></td>
                       </tr>
-                      {%endif%} 
-                      {%endfor%}
+                      {%endif%} {%endfor%}
                     </tbody>
                   </table>
                 </div>
@@ -520,6 +531,7 @@
                                 type="text"
                                 class="form-control"
                                 placeholder="DNI"
+                                maxlength="10"
                                 pattern="[0-9]+"
                                 required=""
                                 name="dni"

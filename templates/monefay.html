@@ -57,7 +57,7 @@
               height="90"
             />
           </a>
-          <h1 class="ml-4 mt-4">Hola {{ session["email"] }}</h1>
+          <h1 class="ml-4 mt-4">Hola {{ session["store"] }}</h1>
         </div>
         <div class="navbar-collapse justify-content-center">
           <form action="/salir">
@@ -129,7 +129,6 @@
         id="pills-home"
       >
         <!--filtro-->
-        <nav class="">navigation links</nav>
         {%with messages = get_flashed_messages(with_categories=true)%}
         {%if messages%} 
         {%for category, message in messages%}
@@ -319,6 +318,7 @@
                               <input
                                 type="text"
                                 class="form-control"
+                                maxlength="10"
                                 placeholder="DNI"
                                 pattern="[0-9]+"
                                 required=""

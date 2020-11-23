@@ -123,7 +123,7 @@ def loginin():
         password_encode = password.encode("utf-8")
         cur = mysql.connection.cursor()
         ### Tabla de cuenta Busqueda de email
-        sQuery = "SELECT email, password FROM usuario WHERE email = %s"
+        sQuery = "SELECT email, password,store FROM usuario WHERE email = %s"
         cur.execute(sQuery,[email])
         usuario = cur.fetchone()
         cur.close()
@@ -131,6 +131,7 @@ def loginin():
             password_encriptado_encode = usuario[1].encode()
             if (bcrypt.checkpw(password_encode,password_encriptado_encode)):
                 session['email'] = usuario[0] 
+                session['store'] = usuario[2]
                 return redirect(url_for('main'))
             else:
                 flash("El password no se correcto", "alert-warning")
@@ -206,9 +207,15 @@ def cuentaRes():
         QueryInteres = "INSERT INTO interes (Cperiodo,TipoInteres,Porcentaje) VALUES(%s,%s,%s)"
         cur.execute(QueryInteres,(Periodo,tipoTasa,tasa_porcentaje))
         mysql.connection.commit()
+        ### CalcularFechaDeMantenimiento
+        fecha = datetime.now()
+        if PeriodoMantenimiento == "PER02":
+            fecha += timedelta(days=30) 
+        if PeriodoMantenimiento == "PER01":
+            fecha += timedelta(days=7) 
         ### Mantenimiento
-        QueryMantenimiento = "INSERT INTO mantenimiento (Cperiodo,monto) VALUES(%s,%s)"
-        cur.execute(QueryMantenimiento,(PeriodoMantenimiento,montoMantenimiento))
+        QueryMantenimiento = "INSERT INTO mantenimiento (Cperiodo,monto,FechaDeCobro) VALUES(%s,%s,%s)"
+        cur.execute(QueryMantenimiento,(PeriodoMantenimiento,montoMantenimiento,fecha))
         mysql.connection.commit()
         ### Codes de Direecion
         DataDireccion = "SELECT MAX(cDireccion) FROM direccion"
@@ -238,34 +245,49 @@ def cuentaRes():
 
     return redirect(url_for('main'))
 
-def deuda(movimientos,periodo,tasa):
-    
+def ConvertirNominalaEfectiva(m,n,TasaNominal):
+    return ((1+(TasaNominal/m))**n)-1
+
+def deuda(deuda, movimientos,periodo,tasaCu,tipodetasa):
     def formula(retiro,tasa,FechaRetiro,DiasPeriodo):
         # print(round((today2-FechaRetiro).days/DiasPeriodo,3))
         difDays = round((today2-FechaRetiro).days/DiasPeriodo,3)
-        valB = float(1 + tasa/100)
+        valB = float(1 + tasa)
         val = valB** (difDays)
         return  retiro*val 
+    tasa = tasaCu/100
+    if tipodetasa == "Tasa Nominal":
+        if periodo == "Mensual":
+            tasa = round(ConvertirNominalaEfectiva(30,30,tasaCu/100),7)
+        if periodo == "Semanal":
+            tasa = round(ConvertirNominalaEfectiva(7,7,tasaCu/100),7)
     today2 = datetime.now() ## Dia actual
     new_date = datetime(2020,10,15,0,0,00,0000)
-    deudaTotal = 0
+    deudaTotal = 0 
+    ### Calculo de deuda sin pagos anteriores
     for i in movimientos:
+        if i[6] == 0:
+            if periodo == "Mensual":
+                deudaTotal += formula(float(deuda),tasa,i[5],30)
+            if periodo == "Semanal":
+                deudaTotal += formula(float(deuda),tasa,i[5],7)
+            return deudaTotal
         if i[6] == 1:
             if periodo == "Mensual":
                 deudaTotal += formula(i[4],tasa,i[5],30)
             if periodo == "Semanal":
                 deudaTotal += formula(i[4],tasa,i[5],7)
-    print(deudaTotal)
     return deudaTotal
 
-def SaldoActual():
-    pass
+def SaldoActual(SaldoUtilizado,Limite):
+    return Limite - SaldoUtilizado
+
 ### Perfil de cuenta
 @app.route("/monefay/<string:cuenta>") 
 def cuenta(cuenta):
     cur = mysql.connection.cursor()
     ### Tabla de movimientos
-    QueryMovimientos = "SELECT * FROM movimiento WHERE Cliente = %s and Usuario = %s"
+    QueryMovimientos = "SELECT * FROM movimiento WHERE Cliente = %s and Usuario = %s ORDER BY FECHA DESC "
     cur.execute(QueryMovimientos,[cuenta,session['email']])
     movimiento = cur.fetchall()
     ### tabla de divisas
@@ -276,12 +298,27 @@ def cuenta(cuenta):
     cur.execute("SELECT * FROM periododepago")
     Periodo = cur.fetchall()
     ## Obtiene los datos de una cuenta
-    queryCliente = "SELECT CL.name,CL.lastnameF,CL.lastnameM,CL.imgprofile,CL.phone,CU.Saldo,inte.TipoInteres,PER.Periodo,DIVI.TipoDivisa,CU.Contratado,CU.id,CU.limite,CL.dni,inte.porcentaje FROM cuenta CU JOIN cliente CL ON CU.idcliente = CL.id JOIN interes inte ON CU.Cinteres = inte.CInteres JOIN mantenimiento man ON CU.Cmantenimiento = man.CMantenimiento JOIN periododepago PER ON inte.CPeriodo = PER.CPeriodo JOIN divisa DIVI ON CU.CDivisa = DIVI.CDivisa WHERE CL.dni = %s"
+    queryCliente = "SELECT CL.name,CL.lastnameF,CL.lastnameM,CL.imgprofile,CL.phone,CU.Saldo,inte.TipoInteres,PER.Periodo,DIVI.TipoDivisa,CU.Contratado,CU.id,CU.limite,CL.dni,inte.porcentaje,CU.deuda,man.FechaDeCobro,man.monto FROM cuenta CU JOIN cliente CL ON CU.idcliente = CL.id JOIN interes inte ON CU.Cinteres = inte.CInteres JOIN mantenimiento man ON CU.Cmantenimiento = man.CMantenimiento JOIN periododepago PER ON inte.CPeriodo = PER.CPeriodo JOIN divisa DIVI ON CU.CDivisa = DIVI.CDivisa WHERE CL.dni = %s"
     cur.execute(queryCliente,[cuenta])
     datosCuenta = cur.fetchall()
+    ### Mantenimiento
+    fechaDeHoy = datetime.now()
+    # fechaDeHoy = datetime(2020,11,30,0,0,00,0000)
+    day = fechaDeHoy.day == datosCuenta[0][15].day
+    month = fechaDeHoy.month == datosCuenta[0][15].month
+    year = fechaDeHoy.year == datosCuenta[0][15].year
+    if day and month and year :
+        flash("Se cobrara mantenimiento: "+str(datosCuenta[0][16]), "alert-warning")
+
     ### Calculando la deuda
-    deudaTotal = deuda(movimiento,datosCuenta[0][7],datosCuenta[0][13])
-    return render_template('monefaycuenta.html',datoscuenta = datosCuenta,divisas = divisa,Periodos = Periodo,movimientos = movimiento,deuda = deudaTotal)
+    deudaTotal = round(deuda(datosCuenta[0][14], movimiento,datosCuenta[0][7],datosCuenta[0][13],datosCuenta[0][6]),4)
+    ### Calculando saldo
+    Saldo = round(SaldoActual(deudaTotal,datosCuenta[0][11]),4)
+    # Se hace el calculo de el saldo
+    QueryUpdate = "UPDATE cuenta SET Saldo = %s WHERE id = %s"
+    cur.execute(QueryUpdate,[Saldo,datosCuenta[0][10]])
+    mysql.connection.commit()
+    return render_template('monefaycuenta.html',datoscuenta = datosCuenta,divisas = divisa,Periodos = Periodo,movimientos = movimiento,deuda = deudaTotal,saldo = Saldo)
 
 ### Funcion de retiro
 @app.route("/retiro", methods=['POST','GET'])
@@ -312,17 +349,39 @@ def Cobro():
         id = request.form['id']
         texto = request.form['DescripcionDeCobro']
         monto = request.form['MontoCobro']
-
         cur = mysql.connection.cursor()
-        ### Insertar movimiento
+
+        ### Tabla de movimientos
+        QueryMovimientos = "SELECT * FROM movimiento WHERE Cliente = %s and Usuario = %s ORDER BY FECHA DESC "
+        cur.execute(QueryMovimientos,[dni,session['email']])
+        movimiento = cur.fetchall()
+        ### Cuenta datos
+        QueryCuenta = "SELECT cu.deuda,PER.Periodo,inte.Porcentaje,cu.limite,inte.TipoInteres,man.FechaDeCobro,man.monto,cu.Cmantenimiento FROM cuenta CU JOIN interes inte ON CU.Cinteres = inte.CInteres JOIN mantenimiento man ON CU.Cmantenimiento = man.CMantenimiento JOIN periododepago PER ON inte.CPeriodo = PER.CPeriodo WHERE cu.id = %s"
+        cur.execute(QueryCuenta,[id])
+        datosCuenta = cur.fetchall()
+        ### Actualizar fecha de mantenimiento
+        # QueryFechaMantenimiento = "UPDATE mantenimiento SET FechaDeCobro = %s WHERE Cmantenimiento = %s"
+        # cur.execute(QueryFechaMantenimiento,[datosCuenta[0][5]+timedelta(days=30),datosCuenta[0][6]])
+        # mysql.connection.commit()
+        ## Calculo de deuda al momento de pago
+
+        deudaNueva = deuda(datosCuenta[0][0], movimiento,datosCuenta[0][1],datosCuenta[0][2],datosCuenta[0][4])
+
+        ### Actualizar deuda
+        QueryDeuda = "UPDATE cuenta SET deuda = %s WHERE id = %s"
+        cur.execute(QueryDeuda,[deudaNueva - float(monto),id])
+        mysql.connection.commit()
+
+        ## Insertar movimiento
         QueryMovimiento = "INSERT INTO movimiento (idcliente,Cliente,Usuario,Monto,TipoDeMovimiento,descripcion) VALUES(%s,%s,%s,%s,%s,%s)"
         cur.execute(QueryMovimiento,(id,dni,session['email'],monto,0,texto))
         mysql.connection.commit()
 
-        ### Se hace el calculo de el saldo
-        QueryUpdate = "UPDATE cuenta SET Saldo = Saldo + %s WHERE id = %s"
-        cur.execute(QueryUpdate,[monto,id])
+        # Se hace el calculo de el saldo
+        QueryUpdate = "UPDATE cuenta SET Saldo = %s WHERE id = %s"
+        cur.execute(QueryUpdate,[float(datosCuenta[0][3]) - (deudaNueva - float(monto)),id])
         mysql.connection.commit()
+
         direccion = "/monefay/" + dni
         ### Deuda
 
