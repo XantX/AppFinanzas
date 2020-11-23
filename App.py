@@ -155,6 +155,8 @@ def delete(cuenta):
     mysql.connection.commit()
     return redirect(url_for('main'))
 
+# fechaSistema = datetime.now()
+fechaSistema = datetime(2020,11,24,0,0,00,0000)
 ### Registrar cuenta 
 @app.route("/cuentaRes",methods=['POST','GET'])
 def cuentaRes():
@@ -237,9 +239,10 @@ def cuentaRes():
         DataCliente = "SELECT MAX(id) FROM cliente"
         cur.execute(DataCliente)
         CCliente = cur.fetchone()
+        ### Fecha en que se crea la cuenta
         ###Inset Cuenta
-        QueryCuenta = "INSERT INTO cuenta (idcliente,storeid,Saldo,Cierre,CDivisa,Activacion,Cmantenimiento,Cinteres,limite) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-        cur.execute(QueryCuenta,(CCliente,storeid,limite,cierre,divisa,activacion,CMantenimiento,CInteres,limite))
+        QueryCuenta = "INSERT INTO cuenta (idcliente,storeid,Saldo,Contratado,Cierre,CDivisa,Activacion,Cmantenimiento,Cinteres,limite) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+        cur.execute(QueryCuenta,(CCliente,storeid,limite,fechaSistema,cierre,divisa,activacion,CMantenimiento,CInteres,limite))
         mysql.connection.commit()
 
 
@@ -250,8 +253,8 @@ def ConvertirNominalaEfectiva(m,n,TasaNominal):
 
 def deuda(deuda, movimientos,periodo,tasaCu,tipodetasa):
     def formula(retiro,tasa,FechaRetiro,DiasPeriodo):
-        # print(round((today2-FechaRetiro).days/DiasPeriodo,3))
-        difDays = round((today2-FechaRetiro).days/DiasPeriodo,3)
+        print(round((fechaSistema-FechaRetiro).days/DiasPeriodo,3))
+        difDays = round((fechaSistema-FechaRetiro).days/DiasPeriodo,3)
         valB = float(1 + tasa)
         val = valB** (difDays)
         return  retiro*val 
@@ -331,8 +334,8 @@ def retiro():
 
         cur = mysql.connection.cursor()
         ### Se agrega un movimiento
-        QueryMovimiento = "INSERT INTO movimiento (idcliente,Cliente,Usuario,Monto,TipoDeMovimiento,descripcion) VALUES(%s,%s,%s,%s,%s,%s)"
-        cur.execute(QueryMovimiento,(id,dni,session['email'],monto,1,texto))
+        QueryMovimiento = "INSERT INTO movimiento (idcliente,Cliente,Usuario,Monto,Fecha,TipoDeMovimiento,descripcion) VALUES(%s,%s,%s,%s,%s,%s,%s)"
+        cur.execute(QueryMovimiento,(id,dni,session['email'],monto,fechaSistema,1,texto))
         mysql.connection.commit()
         ### Se hace el calculo de el saldo
         QueryUpdate = "UPDATE cuenta SET Saldo = Saldo - %s WHERE id = %s"
@@ -373,8 +376,8 @@ def Cobro():
         mysql.connection.commit()
 
         ## Insertar movimiento
-        QueryMovimiento = "INSERT INTO movimiento (idcliente,Cliente,Usuario,Monto,TipoDeMovimiento,descripcion) VALUES(%s,%s,%s,%s,%s,%s)"
-        cur.execute(QueryMovimiento,(id,dni,session['email'],monto,0,texto))
+        QueryMovimiento = "INSERT INTO movimiento (idcliente,Cliente,Usuario,Monto,Fecha,TipoDeMovimiento,descripcion) VALUES(%s,%s,%s,%s,%s,%s,%s)"
+        cur.execute(QueryMovimiento,(id,dni,session['email'],monto,fechaSistema,0,texto))
         mysql.connection.commit()
 
         # Se hace el calculo de el saldo
