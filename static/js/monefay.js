@@ -45,3 +45,4 @@ function pasar() {
   RegresoCobro.classList.remove("active");
   RegresoRetiro.classList.remove("active");
 }
+

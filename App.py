@@ -1,6 +1,8 @@
 from flask import Flask,render_template,request,redirect, url_for,session, flash
 from flask_mysqldb import MySQL
 import bcrypt
+from datetime import date
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 
@@ -236,6 +238,29 @@ def cuentaRes():
 
     return redirect(url_for('main'))
 
+def deuda(movimientos,periodo,tasa):
+    
+    def formula(retiro,tasa,FechaRetiro,DiasPeriodo):
+        # print(round((today2-FechaRetiro).days/DiasPeriodo,3))
+        difDays = round((today2-FechaRetiro).days/DiasPeriodo,3)
+        valB = float(1 + tasa/100)
+        val = valB** (difDays)
+        return  retiro*val 
+    today2 = datetime.now() ## Dia actual
+    new_date = datetime(2020,10,15,0,0,00,0000)
+    deudaTotal = 0
+    for i in movimientos:
+        if i[6] == 1:
+            if periodo == "Mensual":
+                deudaTotal += formula(i[4],tasa,i[5],30)
+            if periodo == "Semanal":
+                deudaTotal += formula(i[4],tasa,i[5],7)
+    print(deudaTotal)
+    return deudaTotal
+
+def SaldoActual():
+    pass
+### Perfil de cuenta
 @app.route("/monefay/<string:cuenta>") 
 def cuenta(cuenta):
     cur = mysql.connection.cursor()
@@ -243,7 +268,6 @@ def cuenta(cuenta):
     QueryMovimientos = "SELECT * FROM movimiento WHERE Cliente = %s and Usuario = %s"
     cur.execute(QueryMovimientos,[cuenta,session['email']])
     movimiento = cur.fetchall()
-    print(movimiento)
     ### tabla de divisas
     Query="SELECT * FROM divisa"
     cur.execute(Query)
@@ -252,10 +276,12 @@ def cuenta(cuenta):
     cur.execute("SELECT * FROM periododepago")
     Periodo = cur.fetchall()
     ## Obtiene los datos de una cuenta
-    queryCliente = "SELECT CL.name,CL.lastnameF,CL.lastnameM,CL.imgprofile,CL.phone,CU.Saldo,inte.TipoInteres,PER.Periodo,DIVI.TipoDivisa,CU.Contratado,CU.id,CU.limite,CL.dni FROM cuenta CU JOIN cliente CL ON CU.idcliente = CL.id JOIN interes inte ON CU.Cinteres = inte.CInteres JOIN mantenimiento man ON CU.Cmantenimiento = man.CMantenimiento JOIN periododepago PER ON inte.CPeriodo = PER.CPeriodo JOIN divisa DIVI ON CU.CDivisa = DIVI.CDivisa WHERE CL.dni = %s"
+    queryCliente = "SELECT CL.name,CL.lastnameF,CL.lastnameM,CL.imgprofile,CL.phone,CU.Saldo,inte.TipoInteres,PER.Periodo,DIVI.TipoDivisa,CU.Contratado,CU.id,CU.limite,CL.dni,inte.porcentaje FROM cuenta CU JOIN cliente CL ON CU.idcliente = CL.id JOIN interes inte ON CU.Cinteres = inte.CInteres JOIN mantenimiento man ON CU.Cmantenimiento = man.CMantenimiento JOIN periododepago PER ON inte.CPeriodo = PER.CPeriodo JOIN divisa DIVI ON CU.CDivisa = DIVI.CDivisa WHERE CL.dni = %s"
     cur.execute(queryCliente,[cuenta])
     datosCuenta = cur.fetchall()
-    return render_template('monefaycuenta.html',datoscuenta = datosCuenta,divisas = divisa,Periodos = Periodo,movimientos = movimiento)
+    ### Calculando la deuda
+    deudaTotal = deuda(movimiento,datosCuenta[0][7],datosCuenta[0][13])
+    return render_template('monefaycuenta.html',datoscuenta = datosCuenta,divisas = divisa,Periodos = Periodo,movimientos = movimiento,deuda = deudaTotal)
 
 ### Funcion de retiro
 @app.route("/retiro", methods=['POST','GET'])
@@ -298,6 +324,8 @@ def Cobro():
         cur.execute(QueryUpdate,[monto,id])
         mysql.connection.commit()
         direccion = "/monefay/" + dni
+        ### Deuda
+
     return redirect(direccion) 
 ### Funcion para salir
 @app.route("/salir")
