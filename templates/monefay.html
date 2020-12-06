@@ -57,7 +57,7 @@
               height="90"
             />
           </a>
-          <h1 class="ml-4 mt-4">Hola {{ session["store"] }}</h1>
+          <h1 class="ml-4 mt-4">Hola "{{ session["store"] }}"</h1>
         </div>
         <div class="navbar-collapse justify-content-center">
           <form action="/salir">
@@ -318,7 +318,8 @@
                               <input
                                 type="text"
                                 class="form-control"
-                                maxlength="10"
+                                minlength="8"
+                                maxlength="8"
                                 placeholder="DNI"
                                 pattern="[0-9]+"
                                 required=""
@@ -558,8 +559,7 @@
                             <input
                               type="date"
                               name="cierre"
-                              min="2018-01-01"
-                              max="2018-12-31"
+                              min="2020-01-01"
                             />
                           </div>
                         </div>

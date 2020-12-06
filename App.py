@@ -156,7 +156,7 @@ def delete(cuenta):
     return redirect(url_for('main'))
 
 # fechaSistema = datetime.now()
-fechaSistema = datetime(2020,11,24,0,0,00,0000)
+fechaSistema = datetime(2020,11,17,0,0,00,0000)
 ### Registrar cuenta 
 @app.route("/cuentaRes",methods=['POST','GET'])
 def cuentaRes():
